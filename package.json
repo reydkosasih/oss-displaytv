@@ -1,0 +1,18 @@
+{
+  "name": "oss-displaytv",
+  "version": "1.0.0",
+  "description": "TV Slideshow Display App",
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i ./src/input.css -o ./public/css/app.css",
+    "watch:css": "npx @tailwindcss/cli -i ./src/input.css -o ./public/css/app.css --watch"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.3.1",
+    "@tailwindcss/cli": "^4.0.0",
+    "chart.js": "^4.5.1",
+    "jquery": "^4.0.0",
+    "sortablejs": "^1.15.7",
+    "sweetalert2": "^11.26.25",
+    "tailwindcss": "^4.0.0"
+  }
+}

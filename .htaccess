@@ -1,0 +1,20 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirect direct access to index.php (remove index.php from URL)
+    RewriteCond %{THE_REQUEST} ^GET.*index\.php [NC]
+    RewriteCond %{THE_REQUEST} !/system/
+    RewriteRule ^(.*)index\.php/(.*)$ /$1$2 [R=301,L]
+
+    RewriteCond %{THE_REQUEST} ^GET.*index\.php [NC]
+    RewriteCond %{THE_REQUEST} !/system/
+    RewriteRule ^(.*)index\.php$ /$1 [R=301,L]
+
+    # Route requests to public/ folder
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^$ public/ [L]
+
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
