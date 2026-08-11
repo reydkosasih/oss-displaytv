@@ -5,7 +5,7 @@
 ![CSS](https://img.shields.io/badge/TailwindCSS-v4.3.3-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
 ![Database](https://img.shields.io/badge/MySQL-8.4%2B-4479A1?style=flat-square&logo=mysql&logoColor=white)
 ![License](https://img.shields.io/badge/License-Open%20Source-green?style=flat-square)
-[![Trakteer](https://img.shields.io/badge/Trakteer-Support-red?style=flat-square)](https://trakteer.id/reydwikosasih)
+[![Trakteer](https://img.shields.io/badge/Trakteer-Support-red?style=flat-square)](https://trakteer.id/rey_kosasih)
 [![PayPal](https://img.shields.io/badge/PayPal-Donate-00457C?style=flat-square&logo=paypal&logoColor=white)](https://paypal.me/reydwikosasih)
 
 **TV Display Management System** adalah aplikasi web berbasis CodeIgniter 4 yang bersifat **Open Source Software** guna mengelola dan menayangkan slideshow media secara otomatis, terpusat, dan real-time pada beberapa layar TV / Display di lingkungan kerja atau pribadi.
@@ -196,7 +196,7 @@ php spark routes
 
 Jika Anda menyukai proyek ini, merasa terbantu, atau menggunakannya untuk kebutuhan operasional/bisnis, Anda dapat memberikan apresiasi dan mendukung pengembangan lebih lanjut melalui:
 
-- 🇮🇩 **Trakteer**: [https://trakteer.id/reydwikosasih](https://trakteer.id/reydwikosasih)
+- 🇮🇩 **Trakteer**: [https://trakteer.id/rey_kosasih](https://trakteer.id/rey_kosasih)
 - 🌐 **PayPal**: [https://paypal.me/reydwikosasih](https://paypal.me/reydwikosasih)
 
 Dukungan Anda sangat berarti untuk menjaga proyek ini tetap aktif dan terus berkembang. Terima kasih banyak! ❤️
@@ -205,7 +205,7 @@ Dukungan Anda sangat berarti untuk menjaga proyek ini tetap aktif dan terus berk
 
 ## 📄 Lisensi & Hak Cipta
 
-Hak Cipta © 2026 **Rey Dwi Kosasih**. Seluruh hak dilindungi undang-undang. Open Source Software. Community Project. Share knowledge for humanity. Donate at [PayPal](https://paypal.me/reydwikosasih) or [Trakteer](https://trakteer.id/reydwikosasih).
+Hak Cipta © 2026 **Rey Dwi Kosasih**. Seluruh hak dilindungi undang-undang. Open Source Software. Community Project. Share knowledge for humanity. Donate at [PayPal](https://paypal.me/reydwikosasih) or [Trakteer](https://trakteer.id/rey_kosasih).
 
 
 ---
@@ -215,8 +215,8 @@ Hak Cipta © 2026 **Rey Dwi Kosasih**. Seluruh hak dilindungi undang-undang. Ope
 | Platform | Link | Deskripsi |
 |---|---|---|
 | **Instagram** | [https://instagram.com/rey_dk](https://instagram.com/rey_dk) | Personal & Project Updates |
-| **Trakteer** | [https://trakteer.id/reydwikosasih](https://trakteer.id/reydwikosasih) | Support Me |
+| **Trakteer** | [https://trakteer.id/rey_kosasih](https://trakteer.id/rey_kosasih) | Support Me |
 | **GitHub** | [https://github.com/reydkosasih](https://github.com/reydkosasih) | Source Code |
-| **LinkedIn** | [https://linkedin.com/in/reydwikosasih](https://linkedin.com/in/reydwikosasih) | Professional Network |
+| **LinkedIn** | [https://linkedin.com/in/rey-dwi-kosasih](https://linkedin.com/in/rey-dwi-kosasih) | Professional Network |
 | **X / Twitter** | [https://x.com/rey_dk](https://x.com/rey_dk) | Thoughts & Updates |
 
