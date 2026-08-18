@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\CategoryModel;
+use App\Libraries\AuditLogger;
 
 class CategoryController extends BaseController
 {
@@ -77,6 +78,12 @@ class CategoryController extends BaseController
 
         $this->categoryModel->insert($data);
 
+        // Audit Log: Buat kategori baru
+        AuditLogger::log('create', 'category', "Membuat kategori baru: {$name}", [
+            'entity_name' => $name,
+            'new_values'  => $data,
+        ]);
+
         return $this->response->setJSON([
             'status'  => 'success',
             'message' => 'Kategori baru berhasil ditambahkan.'
@@ -142,6 +149,14 @@ class CategoryController extends BaseController
             'color' => $color,
         ];
 
+        // Audit Log: Update kategori
+        AuditLogger::log('update', 'category', "Mengubah kategori: {$category['name']} => {$name}", [
+            'entity_id'   => $id,
+            'entity_name' => $category['name'],
+            'old_values'  => ['name' => $category['name'], 'slug' => $category['slug'], 'color' => $category['color']],
+            'new_values'  => $data,
+        ]);
+
         $this->categoryModel->update($id, $data);
 
         return $this->response->setJSON([
@@ -163,6 +178,13 @@ class CategoryController extends BaseController
                 'message' => 'Kategori tidak ditemukan.'
             ]);
         }
+
+        // Audit Log: Hapus kategori
+        AuditLogger::log('delete', 'category', "Menghapus kategori: {$category['name']}", [
+            'entity_id'   => $id,
+            'entity_name' => $category['name'],
+            'old_values'  => ['name' => $category['name'], 'slug' => $category['slug'], 'color' => $category['color']],
+        ]);
 
         $this->categoryModel->delete($id);
 

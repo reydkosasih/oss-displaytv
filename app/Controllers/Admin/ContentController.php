@@ -8,6 +8,7 @@ use App\Models\CategoryModel;
 use App\Models\ContentChartModel;
 use App\Models\TvCategoryModel;
 use App\Models\TvUpdateEventModel;
+use App\Libraries\AuditLogger;
 
 class ContentController extends BaseController
 {
@@ -212,6 +213,12 @@ class ContentController extends BaseController
         $this->contentModel->insert($data);
         $this->notifyTvsByCategory($categoryId);
 
+        // Audit Log: Buat konten gambar
+        AuditLogger::log('create', 'content', "Menambahkan konten gambar: {$data['title']}", [
+            'entity_name' => $data['title'],
+            'new_values'  => array_diff_key($data, ['created_by' => '']),
+        ]);
+
         return $this->response->setJSON([
             'status'  => 'success',
             'message' => 'Konten gambar berhasil ditambahkan.'
@@ -318,6 +325,13 @@ class ContentController extends BaseController
 
         $this->contentModel->insert($data);
         $this->notifyTvsByCategory($categoryId);
+
+        // Audit Log: Buat konten video
+        $sourceLabel = $data['video_source'] === 'youtube' ? 'YouTube' : 'Upload';
+        AuditLogger::log('create', 'content', "Menambahkan konten video ({$sourceLabel}): {$data['title']}", [
+            'entity_name' => $data['title'],
+            'new_values'  => array_diff_key($data, ['created_by' => '']),
+        ]);
 
         return $this->response->setJSON([
             'status'  => 'success',
@@ -454,6 +468,11 @@ class ContentController extends BaseController
             ]);
         }
 
+        // Audit Log: Batch upload
+        AuditLogger::log('create', 'content', "Batch upload: {$successCount} konten media berhasil ditambahkan" . ($failedCount > 0 ? ", {$failedCount} gagal" : ''), [
+            'new_values' => ['success_count' => $successCount, 'failed_count' => $failedCount, 'categories' => array_keys($notifiedCatIds)],
+        ]);
+
         return $this->response->setJSON([
             'status'        => 'success',
             'message'       => "Berhasil mengunggah {$successCount} konten media." . ($failedCount > 0 ? " ({$failedCount} gagal)" : ''),
@@ -544,6 +563,13 @@ class ContentController extends BaseController
         ]);
 
         $this->notifyTvsByCategory($categoryId);
+
+        // Audit Log: Buat konten chart
+        AuditLogger::log('create', 'content', "Menambahkan konten chart: {$data['title']}", [
+            'entity_id'   => $contentId,
+            'entity_name' => $data['title'],
+            'new_values'  => array_diff_key($data, ['created_by' => '']),
+        ]);
 
         return $this->response->setJSON([
             'status'  => 'success',
@@ -922,6 +948,14 @@ class ContentController extends BaseController
         }
 
         $categoryId = (int) $content['category_id'];
+
+        // Audit Log: Hapus konten
+        AuditLogger::log('delete', 'content', "Menghapus konten: {$content['title']} (Tipe: {$content['type']})", [
+            'entity_id'   => $id,
+            'entity_name' => $content['title'],
+            'old_values'  => ['title' => $content['title'], 'type' => $content['type'], 'category_id' => $content['category_id']],
+        ]);
+
         $this->contentModel->delete($id);
 
         $this->notifyTvsByCategory($categoryId);
@@ -958,6 +992,15 @@ class ContentController extends BaseController
 
         $this->contentModel->update($id, ['is_active' => $newStatus]);
         $this->notifyTvsByCategory($categoryId);
+
+        // Audit Log: Toggle status konten
+        $statusLabel = $newStatus === 1 ? 'Aktif' : 'Nonaktif';
+        AuditLogger::log('toggle', 'content', "Mengubah status konten: {$content['title']} menjadi {$statusLabel}", [
+            'entity_id'   => $id,
+            'entity_name' => $content['title'],
+            'old_values'  => ['is_active' => $content['is_active']],
+            'new_values'  => ['is_active' => $newStatus],
+        ]);
 
         return $this->response->setJSON([
             'status'     => 'success',

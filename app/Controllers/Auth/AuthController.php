@@ -4,6 +4,7 @@ namespace App\Controllers\Auth;
 
 use App\Controllers\BaseController;
 use App\Models\UserModel;
+use App\Libraries\AuditLogger;
 
 class AuthController extends BaseController
 {
@@ -68,6 +69,14 @@ class AuthController extends BaseController
         // Update Last Login Timestamp
         $this->userModel->updateLastLogin((int) $user['id']);
 
+        // Audit Log: Login berhasil
+        AuditLogger::log('login', 'auth', "Login berhasil: {$user['name']} ({$user['email']}) sebagai {$user['role']}", [
+            'user_id'   => (int) $user['id'],
+            'user_name' => $user['name'],
+            'user_role' => $user['role'],
+            'entity_name' => $user['email'],
+        ]);
+
         return redirect()->to('/admin/dashboard')->with('success', 'Selamat datang kembali, ' . esc($user['name']));
     }
 
@@ -76,7 +85,48 @@ class AuthController extends BaseController
      */
     public function logout()
     {
+        $reason = $this->request->getGet('reason');
+
+        // Audit Log: Logout (sebelum session dihancurkan)
+        $userId   = (int) session()->get('user_id');
+        $userName = (string) session()->get('name');
+        $userRole = (string) session()->get('role');
+        $logoutDesc = $reason === 'timeout'
+            ? "Logout otomatis (session timeout) — {$userName}"
+            : "Logout manual — {$userName}";
+        AuditLogger::log('logout', 'auth', $logoutDesc, [
+            'user_id'   => $userId,
+            'user_name' => $userName,
+            'user_role' => $userRole,
+        ]);
+
         session()->destroy();
-        return redirect()->to('/login')->with('success', 'Anda telah berhasil logout.');
+
+        if ($reason === 'timeout') {
+            session()->setFlashdata('warning', 'Sesi Anda telah berakhir karena tidak ada aktivitas selama 15 menit. Silakan login kembali.');
+        } else {
+            session()->setFlashdata('success', 'Anda telah berhasil logout.');
+        }
+
+        return redirect()->to('/login');
+    }
+
+    /**
+     * Keep-alive ping untuk memperpanjang session admin
+     */
+    public function keepAlive()
+    {
+        if (!session()->get('isLoggedIn')) {
+            return $this->response->setStatusCode(401)->setJSON([
+                'status'  => 'error',
+                'message' => 'Unauthenticated'
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'status'    => 'success',
+            'message'   => 'Session refreshed',
+            'timestamp' => time()
+        ]);
     }
 }

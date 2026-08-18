@@ -50,16 +50,16 @@
     </style>
 </head>
 <body class="h-full bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased selection:bg-blue-500 selection:text-white transition-colors duration-200">
-    <div class="min-h-full flex">
+    <div class="h-screen flex overflow-hidden">
 
         <!-- Mobile Sidebar Overlay -->
         <div id="sidebarOverlay" class="fixed inset-0 z-40 bg-slate-950/80 backdrop-blur-sm opacity-0 pointer-events-none lg:hidden"></div>
 
         <!-- Sidebar Navigation (Desktop: static | Mobile: slide-over drawer) -->
-        <aside id="mobileSidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 -translate-x-full lg:translate-x-0 transition-all duration-200">
-            <div>
+        <aside id="mobileSidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-64 h-full bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between shrink-0 -translate-x-full lg:translate-x-0 transition-all duration-200 overflow-hidden">
+            <div class="flex-1 flex flex-col min-h-0 overflow-y-auto">
                 <!-- Brand Header -->
-                <div class="h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur">
+                <div class="h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur shrink-0">
                     <div class="flex items-center space-x-3">
                         <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-sky-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
                             <i class="fa-solid fa-tv text-white text-sm"></i>
@@ -73,7 +73,7 @@
 
                 <!-- Navigation Links -->
                 <?php $activeSegment = service('request')->getUri()->getSegment(2); ?>
-                <nav class="p-4 space-y-1">
+                <nav class="p-4 space-y-1 flex-1">
                     <a href="<?= base_url('admin/dashboard') ?>" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 border border-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white ux-hover <?= $activeSegment === 'dashboard' ? 'bg-blue-600/20 text-blue-600 dark:text-blue-400 border-blue-500/30 font-semibold' : '' ?>">
                         <i class="fa-solid fa-chart-pie w-5 text-center text-slate-400 <?= $activeSegment === 'dashboard' ? 'text-blue-600 dark:text-blue-400' : '' ?>"></i>
                         <span>Dashboard</span>
@@ -107,6 +107,15 @@
                         <span>Kelola Display TV</span>
                     </a>
 
+                    <div class="pt-4 pb-1">
+                        <p class="px-3.5 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Aktivitas & Log</p>
+                    </div>
+
+                    <a href="<?= base_url('admin/audit-logs') ?>" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 border border-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white ux-hover <?= $activeSegment === 'audit-logs' ? 'bg-blue-600/20 text-blue-600 dark:text-blue-400 border-blue-500/30 font-semibold' : '' ?>">
+                        <i class="fa-solid fa-scroll w-5 text-center text-slate-400 <?= $activeSegment === 'audit-logs' ? 'text-blue-600 dark:text-blue-400' : '' ?>"></i>
+                        <span>Audit Logs</span>
+                    </a>
+
                     <?php if (session()->get('role') === 'superadmin'): ?>
                     <div class="pt-4 pb-1">
                         <p class="px-3.5 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Pengaturan System</p>
@@ -121,7 +130,7 @@
             </div>
 
             <!-- Bottom User Card -->
-            <div class="p-4 border-t border-slate-200 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/40">
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/40 shrink-0">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3 overflow-hidden">
                         <div class="w-9 h-9 rounded-full bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300 shrink-0 font-semibold text-xs">
@@ -148,7 +157,7 @@
         </aside>
 
         <!-- Main Content Area -->
-        <div class="flex-1 flex flex-col min-w-0 overflow-hidden bg-slate-100 dark:bg-slate-950 transition-colors duration-200">
+        <div class="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-slate-100 dark:bg-slate-950 transition-colors duration-200">
             <!-- Topbar -->
             <header class="h-16 bg-white/80 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800/80 backdrop-blur flex items-center justify-between px-5 md:px-8 z-10 shrink-0">
                 <div class="flex items-center space-x-4">
@@ -354,6 +363,25 @@
             }
         });
     </script>
+
+    <!-- Admin Session Timeout Engine -->
+    <script src="<?= asset_url('js/admin-session-timeout.js') ?>"></script>
+    <script>
+        $(document).ready(function() {
+            if (window.AdminSessionTimeout) {
+                window.AdminSessionTimeout.init({
+                    idleDuration: 15 * 60 * 1000,
+                    warningDuration: 60 * 1000,
+                    keepAliveUrl: '<?= base_url('admin/keep-alive') ?>',
+                    logoutUrl: '<?= base_url('auth/logout?reason=timeout') ?>',
+                    manualLogoutUrl: '<?= base_url('auth/logout') ?>'
+                });
+            }
+        });
+    </script>
+
+    <!-- Global Modals Portal Section -->
+    <?= $this->renderSection('modals') ?>
 
     <?= $this->renderSection('scripts') ?>
 </body>

@@ -76,7 +76,7 @@ class DisplayController extends BaseController
      */
     protected function getPlaylistData(int $tvId): array
     {
-        $playlist = $this->playlistItemModel->getPlaylistForTv($tvId);
+        $playlist = $this->playlistItemModel->getPlaylistForTv($tvId, true);
         $db       = \Config\Database::connect();
 
         foreach ($playlist as &$cnt) {

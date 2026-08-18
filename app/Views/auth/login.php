@@ -78,6 +78,20 @@
                 </div>
             <?php endif; ?>
 
+            <?php if (session()->getFlashdata('warning')): ?>
+                <div class="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-300 text-xs flex items-center space-x-3">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-500 dark:text-amber-400 text-base shrink-0"></i>
+                    <span><?= session()->getFlashdata('warning') ?></span>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->getFlashdata('info')): ?>
+                <div class="mb-6 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-300 text-xs flex items-center space-x-3">
+                    <i class="fa-solid fa-circle-info text-blue-500 dark:text-blue-400 text-base shrink-0"></i>
+                    <span><?= session()->getFlashdata('info') ?></span>
+                </div>
+            <?php endif; ?>
+
             <?php if (session()->getFlashdata('success')): ?>
                 <div class="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-300 text-xs flex items-center space-x-3">
                     <i class="fa-solid fa-circle-check text-emerald-500 dark:text-emerald-400 text-base shrink-0"></i>

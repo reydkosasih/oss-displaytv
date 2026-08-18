@@ -53,9 +53,11 @@
         </table>
     </div>
 </div>
+<?= $this->endSection() ?>
 
+<?= $this->section('modals') ?>
 <!-- Modal / Bottom Sheet Drawer Form TV (Tambah / Edit) -->
-<div id="tvModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200">
+<div id="tvModal" class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200 p-0 sm:p-4">
     <div class="bg-white dark:bg-slate-900 border-t border-x sm:border border-slate-200 dark:border-slate-800 rounded-t-2xl sm:rounded-2xl w-full max-w-xl p-6 shadow-2xl relative transform transition-all duration-300 max-h-[85vh] sm:max-h-[90vh] flex flex-col animate-slide-up sm:animate-none">
         
         <!-- Mobile Bottom Sheet Handle Bar -->
@@ -144,7 +146,6 @@
         </form>
     </div>
 </div>
-
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
@@ -296,6 +297,13 @@
         // Close Modal
         $('.btnCloseModal').on('click', function () {
             $('#tvModal').addClass('hidden');
+        });
+
+        // Close Modal on Backdrop Click
+        $('#tvModal').on('click', function (e) {
+            if (e.target === this) {
+                $('#tvModal').addClass('hidden');
+            }
         });
 
         // Thumbnail Preview

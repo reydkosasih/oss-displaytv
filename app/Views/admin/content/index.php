@@ -110,9 +110,11 @@
         </table>
     </div>
 </div>
+<?= $this->endSection() ?>
 
+<?= $this->section('modals') ?>
 <!-- Modal / Bottom Sheet Drawer Form Gambar (Upload / Edit) -->
-<div id="imageModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200">
+<div id="imageModal" class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200 p-0 sm:p-4">
     <div class="bg-white dark:bg-slate-900 border-t border-x sm:border border-slate-200 dark:border-slate-800 rounded-t-2xl sm:rounded-2xl w-full max-w-lg p-6 shadow-2xl relative transform transition-all duration-300 max-h-[85vh] sm:max-h-[90vh] flex flex-col animate-slide-up sm:animate-none">
         
         <!-- Mobile Bottom Sheet Handle Bar -->
@@ -196,7 +198,7 @@
 </div>
 
 <!-- Modal / Bottom Sheet Drawer Form Video (Upload / Embed YouTube) -->
-<div id="videoModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200">
+<div id="videoModal" class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200 p-0 sm:p-4">
     <div class="bg-white dark:bg-slate-900 border-t border-x sm:border border-slate-200 dark:border-slate-800 rounded-t-2xl sm:rounded-2xl w-full max-w-lg p-6 shadow-2xl relative transform transition-all duration-300 max-h-[85vh] sm:max-h-[90vh] flex flex-col animate-slide-up sm:animate-none">
         
         <!-- Mobile Bottom Sheet Handle Bar -->
@@ -228,7 +230,7 @@
 
                 <div>
                     <label for="videoTitle" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Judul Video</label>
-                    <input type="text" id="videoTitle" name="title" required placeholder="Contoh: Video Profil Company"
+                    <input type="text" id="videoTitle" name="title" required placeholder="Contoh: Video Profil FSI"
                         class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-all">
                     <p class="text-[10px] text-rose-500 mt-1 hidden" id="err_v_title"></p>
                 </div>
@@ -300,7 +302,7 @@
 </div>
 
 <!-- Modal / Bottom Sheet Drawer Form Chart (Chart.js Config) -->
-<div id="chartModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200">
+<div id="chartModal" class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200 p-0 sm:p-4">
     <div class="bg-white dark:bg-slate-900 border-t border-x sm:border border-slate-200 dark:border-slate-800 rounded-t-2xl sm:rounded-2xl w-full max-w-3xl p-6 shadow-2xl relative transform transition-all duration-300 max-h-[85vh] sm:max-h-[90vh] flex flex-col animate-slide-up sm:animate-none">
         
         <!-- Mobile Bottom Sheet Handle Bar -->
@@ -434,7 +436,7 @@
 </div>
 
 <!-- Modal / Bottom Sheet Drawer Batch Upload Confirmation -->
-<div id="batchUploadModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200">
+<div id="batchUploadModal" class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200 p-0 sm:p-4">
     <div class="bg-white dark:bg-slate-900 border-t border-x sm:border border-slate-200 dark:border-slate-800 rounded-t-2xl sm:rounded-2xl w-full max-w-3xl p-6 shadow-2xl relative transform transition-all duration-300 max-h-[85vh] sm:max-h-[90vh] flex flex-col animate-slide-up sm:animate-none">
         
         <!-- Mobile Bottom Sheet Handle Bar -->
@@ -1083,6 +1085,13 @@
             $('#imageModal, #videoModal, #chartModal').addClass('hidden');
         });
 
+        // Close Modal on Backdrop Click
+        $('#imageModal, #videoModal, #chartModal').on('click', function (e) {
+            if (e.target === this) {
+                $(this).addClass('hidden');
+            }
+        });
+
         $(document).on('click', '.btnToggleStatus', function () {
             const id = $(this).data('id');
             $.ajax({
@@ -1329,6 +1338,14 @@
         $('.btnCloseBatchModal').on('click', function () {
             $('#batchUploadModal').addClass('hidden');
             batchFiles = [];
+        });
+
+        // Close Batch Modal on Backdrop Click
+        $('#batchUploadModal').on('click', function (e) {
+            if (e.target === this) {
+                $('#batchUploadModal').addClass('hidden');
+                batchFiles = [];
+            }
         });
 
         function renderBatchModal() {

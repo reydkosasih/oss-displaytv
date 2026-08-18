@@ -10,13 +10,11 @@ class AddDepartmentAndUserCategories extends Migration
     {
         $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
 
-        // 1. Tambah kolom department pada tabel users (aman berulang via fieldExists)
-        if (!$this->db->fieldExists('department', 'users')) {
-            $this->db->query("
-                ALTER TABLE users
-                ADD COLUMN department VARCHAR(100) NULL AFTER `role`;
-            ");
-        }
+        // 1. Tambah kolom department pada tabel users (aman berulang via IF NOT EXISTS)
+        $this->db->query("
+            ALTER TABLE users
+            ADD COLUMN IF NOT EXISTS department VARCHAR(100) NULL AFTER `role`;
+        ");
 
         // 2. Buat tabel user_categories
         $this->db->query("
@@ -41,13 +39,11 @@ class AddDepartmentAndUserCategories extends Migration
         // Hapus tabel user_categories jika ada
         $this->db->query('DROP TABLE IF EXISTS user_categories');
 
-        // Hapus kolom department dari users jika ada
-        if ($this->db->fieldExists('department', 'users')) {
-            $this->db->query("
-                ALTER TABLE users
-                DROP COLUMN department;
-            ");
-        }
+        // Hapus kolom department dari users jika ada (MySQL 8+)
+        $this->db->query("
+            ALTER TABLE users
+            DROP COLUMN IF EXISTS department;
+        ");
 
         $this->db->query('SET FOREIGN_KEY_CHECKS = 1');
     }

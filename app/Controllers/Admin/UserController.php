@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\UserModel;
 use App\Models\CategoryModel;
 use App\Models\UserCategoryModel;
+use App\Libraries\AuditLogger;
 
 class UserController extends BaseController
 {
@@ -94,6 +95,13 @@ class UserController extends BaseController
         } else {
             $this->userCategoryModel->syncCategories((int) $userId, []);
         }
+
+        // Audit Log: Buat user baru
+        AuditLogger::log('create', 'user', "Membuat user baru: {$data['name']} ({$data['email']}) sebagai {$role}", [
+            'entity_id'   => $userId,
+            'entity_name' => $data['name'],
+            'new_values'  => array_diff_key($data, ['password' => '']),
+        ]);
 
         return $this->response->setJSON([
             'status'  => 'success',
@@ -194,6 +202,16 @@ class UserController extends BaseController
             $this->userCategoryModel->syncCategories((int) $id, []);
         }
 
+        // Audit Log: Update user
+        $oldSnap = array_diff_key($user, ['password' => '']);
+        $newSnap = array_diff_key($data, ['password' => '']);
+        AuditLogger::log('update', 'user', "Memperbarui data user: {$user['name']} (ID:{$id})", [
+            'entity_id'   => $id,
+            'entity_name' => $user['name'],
+            'old_values'  => $oldSnap,
+            'new_values'  => $newSnap,
+        ]);
+
         return $this->response->setJSON([
             'status'  => 'success',
             'message' => 'Data user berhasil diperbarui.'
@@ -222,6 +240,13 @@ class UserController extends BaseController
                 'message' => 'User tidak ditemukan.'
             ]);
         }
+
+        // Audit Log: Hapus user
+        AuditLogger::log('delete', 'user', "Menghapus user: {$user['name']} ({$user['email']})", [
+            'entity_id'   => $id,
+            'entity_name' => $user['name'],
+            'old_values'  => ['name' => $user['name'], 'email' => $user['email'], 'role' => $user['role']],
+        ]);
 
         $this->userModel->delete($id);
 
@@ -257,9 +282,18 @@ class UserController extends BaseController
         $newStatus = $user['is_active'] == 1 ? 0 : 1;
         $this->userModel->update($id, ['is_active' => $newStatus]);
 
+        // Audit Log: Toggle status user
+        $statusLabel = $newStatus === 1 ? 'Aktif' : 'Nonaktif';
+        AuditLogger::log('toggle', 'user', "Mengubah status user: {$user['name']} menjadi {$statusLabel}", [
+            'entity_id'   => $id,
+            'entity_name' => $user['name'],
+            'old_values'  => ['is_active' => $user['is_active']],
+            'new_values'  => ['is_active' => $newStatus],
+        ]);
+
         return $this->response->setJSON([
-            'status'  => 'success',
-            'message' => 'Status user berhasil diperbarui.',
+            'status'     => 'success',
+            'message'    => 'Status user berhasil diperbarui.',
             'new_status' => $newStatus
         ]);
     }

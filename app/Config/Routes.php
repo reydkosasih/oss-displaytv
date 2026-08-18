@@ -18,10 +18,12 @@ $routes->get('login', 'Auth\AuthController::login');
 $routes->post('login', 'Auth\AuthController::attemptLogin');
 $routes->get('logout', 'Auth\AuthController::logout');
 $routes->get('auth/logout', 'Auth\AuthController::logout');
+$routes->get('auth/keep-alive', 'Auth\AuthController::keepAlive');
 
 // Admin Routes (Protected by AuthFilter)
 $routes->group('admin', ['filter' => 'auth'], static function ($routes) {
     $routes->get('dashboard', 'Admin\DashboardController::index');
+    $routes->get('keep-alive', 'Auth\AuthController::keepAlive');
 
     // Category Routes (Admin & Superadmin)
     $routes->group('category', static function ($routes) {
@@ -49,12 +51,15 @@ $routes->group('admin', ['filter' => 'auth'], static function ($routes) {
         $routes->post('toggle-status/(:num)', 'Admin\ContentController::toggleStatus/$1');
     });
 
-    // Playlist Reorder Routes (Admin & Superadmin)
+    // Playlist & Schedule Management Routes (Admin & Superadmin)
     $routes->group('playlist', static function ($routes) {
         $routes->get('/', 'Admin\PlaylistController::index');
         $routes->get('manage/(:num)', 'Admin\PlaylistController::index/$1');
         $routes->get('get/(:num)', 'Admin\PlaylistController::getPlaylistJson/$1');
+        $routes->get('calendar/(:num)', 'Admin\PlaylistController::getCalendarData/$1');
         $routes->post('reorder', 'Admin\PlaylistController::reorder');
+        $routes->post('update-schedule', 'Admin\PlaylistController::updateSchedule');
+        $routes->post('reset-schedule', 'Admin\PlaylistController::resetSchedule');
     });
 
     // TV Management Routes (Superadmin Only)
@@ -77,5 +82,15 @@ $routes->group('admin', ['filter' => 'auth'], static function ($routes) {
         $routes->post('update/(:num)', 'Admin\UserController::update/$1');
         $routes->post('delete/(:num)', 'Admin\UserController::delete/$1');
         $routes->post('toggle-status/(:num)', 'Admin\UserController::toggleStatus/$1');
+    });
+
+    // Audit Logs Routes (Admin & Superadmin)
+    $routes->group('audit-logs', static function ($routes) {
+        $routes->get('/', 'Admin\AuditLogController::index');
+        $routes->get('list', 'Admin\AuditLogController::list');
+        $routes->get('get/(:num)', 'Admin\AuditLogController::getJson/$1');
+        $routes->get('export-csv', 'Admin\AuditLogController::exportCsv');
+        // Purge: Superadmin only
+        $routes->post('purge', 'Admin\AuditLogController::purge', ['filter' => 'superadmin']);
     });
 });

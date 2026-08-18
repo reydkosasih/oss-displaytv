@@ -7,6 +7,7 @@ use App\Models\TvModel;
 use App\Models\CategoryModel;
 use App\Models\TvCategoryModel;
 use App\Models\TvUpdateEventModel;
+use App\Libraries\AuditLogger;
 
 class TvController extends BaseController
 {
@@ -128,6 +129,13 @@ class TvController extends BaseController
         $categoryIds = $this->request->getPost('category_ids') ?? [];
         $this->tvCategoryModel->syncCategories((int) $tvId, (array) $categoryIds);
 
+        // Audit Log: Buat TV baru
+        AuditLogger::log('create', 'tv', "Membuat Display TV baru: {$name} (Lokasi: {$tvData['location']})", [
+            'entity_id'   => $tvId,
+            'entity_name' => $name,
+            'new_values'  => array_diff_key($tvData, ['pin' => '']),
+        ]);
+
         return $this->response->setJSON([
             'status'  => 'success',
             'message' => 'Display TV baru berhasil ditambahkan.'
@@ -216,6 +224,14 @@ class TvController extends BaseController
         // Push SSE event category/playlist update
         $this->tvEventModel->pushEvent((int) $id, 'playlist_changed');
 
+        // Audit Log: Update TV
+        AuditLogger::log('update', 'tv', "Memperbarui data Display TV: {$tv['name']} (ID:{$id})", [
+            'entity_id'   => $id,
+            'entity_name' => $tv['name'],
+            'old_values'  => ['name' => $tv['name'], 'location' => $tv['location'], 'is_active' => $tv['is_active']],
+            'new_values'  => array_diff_key($tvData, ['pin' => '', 'pin_updated_at' => '']),
+        ]);
+
         return $this->response->setJSON([
             'status'  => 'success',
             'message' => 'Data Display TV berhasil diperbarui.'
@@ -235,6 +251,13 @@ class TvController extends BaseController
                 'message' => 'TV tidak ditemukan.'
             ]);
         }
+
+        // Audit Log: Hapus TV
+        AuditLogger::log('delete', 'tv', "Menghapus Display TV: {$tv['name']} (ID:{$id})", [
+            'entity_id'   => $id,
+            'entity_name' => $tv['name'],
+            'old_values'  => ['name' => $tv['name'], 'slug' => $tv['slug'], 'location' => $tv['location']],
+        ]);
 
         $this->tvModel->delete($id);
 
@@ -267,6 +290,12 @@ class TvController extends BaseController
 
         // Push event 'pin_regenerated' to tv_update_events for SSE trigger
         $this->tvEventModel->pushEvent((int) $id, 'pin_regenerated');
+
+        // Audit Log: Regenerasi PIN TV
+        AuditLogger::log('regenerate', 'tv', "Regenerasi PIN Display TV: {$tv['name']} (ID:{$id})", [
+            'entity_id'   => $id,
+            'entity_name' => $tv['name'],
+        ]);
 
         return $this->response->setJSON([
             'status'  => 'success',
