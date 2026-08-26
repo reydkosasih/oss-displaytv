@@ -41,8 +41,8 @@
 </div>
 
 <!-- Quick Main Page Dropzone -->
+<input type="file" id="mainFileInput" multiple accept="image/jpeg,image/jpg,image/png,image/webp,video/mp4,video/webm" class="hidden">
 <div id="mainDropZone" class="mb-6 p-6 border-2 border-dashed border-slate-300 dark:border-slate-700/80 rounded-2xl bg-white dark:bg-slate-900/60 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 hover:border-blue-500 dark:hover:border-blue-500 transition-all duration-200 text-center cursor-pointer group relative overflow-hidden shadow-sm">
-    <input type="file" id="mainFileInput" multiple accept="image/jpeg,image/jpg,image/png,image/webp,video/mp4,video/webm" class="hidden">
     <div class="flex flex-col items-center justify-center space-y-2 pointer-events-none">
         <div class="w-12 h-12 rounded-2xl bg-blue-600/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
             <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
@@ -114,7 +114,7 @@
 
 <?= $this->section('modals') ?>
 <!-- Modal / Bottom Sheet Drawer Form Gambar (Upload / Edit) -->
-<div id="imageModal" class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200 p-0 sm:p-4">
+<div id="imageModal" class="fixed inset-0 z-60 flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200 p-0 sm:p-4">
     <div class="bg-white dark:bg-slate-900 border-t border-x sm:border border-slate-200 dark:border-slate-800 rounded-t-2xl sm:rounded-2xl w-full max-w-lg p-6 shadow-2xl relative transform transition-all duration-300 max-h-[85vh] sm:max-h-[90vh] flex flex-col animate-slide-up sm:animate-none">
         
         <!-- Mobile Bottom Sheet Handle Bar -->
@@ -158,12 +158,12 @@
                     <p class="text-[10px] text-rose-500 mt-1 hidden" id="err_display_duration_seconds"></p>
                 </div>
                 <div>
-                    <label for="imageFile" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center justify-between">
+                    <label for="imageFile" class="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center justify-between">
                         <span>File Gambar <span id="imageFileHelp" class="text-slate-400 dark:text-slate-500 font-normal text-[10px]">(JPG, PNG, WEBP, Maks 10MB)</span></span>
                         <span id="imageSelectedFileInfo" class="text-[10px] text-blue-600 dark:text-blue-400 font-mono font-semibold hidden"></span>
                     </label>
+                    <input type="file" id="imageFile" name="image_file" accept="image/jpeg,image/jpg,image/png,image/webp" class="hidden">
                     <div id="imageDropZone" class="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-4 text-center cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50/30 dark:hover:bg-blue-950/20 transition-all">
-                        <input type="file" id="imageFile" name="image_file" accept="image/jpeg,image/jpg,image/png,image/webp" class="hidden">
                         <div class="flex flex-col items-center justify-center space-y-1">
                             <i class="fa-solid fa-cloud-arrow-up text-blue-500 text-lg"></i>
                             <p class="text-xs text-slate-600 dark:text-slate-300 font-medium">Tarik & lepas gambar di sini, atau <span class="text-blue-600 dark:text-blue-400 underline font-semibold">pilih berkas</span></p>
@@ -198,7 +198,7 @@
 </div>
 
 <!-- Modal / Bottom Sheet Drawer Form Video (Upload / Embed YouTube) -->
-<div id="videoModal" class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200 p-0 sm:p-4">
+<div id="videoModal" class="fixed inset-0 z-60 flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200 p-0 sm:p-4">
     <div class="bg-white dark:bg-slate-900 border-t border-x sm:border border-slate-200 dark:border-slate-800 rounded-t-2xl sm:rounded-2xl w-full max-w-lg p-6 shadow-2xl relative transform transition-all duration-300 max-h-[85vh] sm:max-h-[90vh] flex flex-col animate-slide-up sm:animate-none">
         
         <!-- Mobile Bottom Sheet Handle Bar -->
@@ -249,12 +249,12 @@
                 <!-- Section Source: Upload -->
                 <div id="sectionUploadVideo" class="space-y-4">
                     <div>
-                        <label for="videoFile" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center justify-between">
+                        <label for="videoFile" class="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5 flex items-center justify-between">
                             <span>Upload File Video <span class="text-slate-400 dark:text-slate-500 font-normal text-[10px]">(MP4, WEBM, Maks 100MB)</span></span>
                             <span id="videoSelectedFileInfo" class="text-[10px] text-sky-600 dark:text-sky-400 font-mono font-semibold hidden"></span>
                         </label>
+                        <input type="file" id="videoFile" name="video_file" accept="video/mp4,video/webm" class="hidden">
                         <div id="videoDropZone" class="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-4 text-center cursor-pointer hover:border-sky-500 dark:hover:border-sky-500 hover:bg-sky-50/30 dark:hover:bg-sky-950/20 transition-all">
-                            <input type="file" id="videoFile" name="video_file" accept="video/mp4,video/webm" class="hidden">
                             <div class="flex flex-col items-center justify-center space-y-1">
                                 <i class="fa-solid fa-file-video text-sky-500 text-lg"></i>
                                 <p class="text-xs text-slate-600 dark:text-slate-300 font-medium">Tarik & lepas file video di sini, atau <span class="text-sky-600 dark:text-sky-400 underline font-semibold">pilih berkas</span></p>
@@ -302,7 +302,7 @@
 </div>
 
 <!-- Modal / Bottom Sheet Drawer Form Chart (Chart.js Config) -->
-<div id="chartModal" class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200 p-0 sm:p-4">
+<div id="chartModal" class="fixed inset-0 z-60 flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200 p-0 sm:p-4">
     <div class="bg-white dark:bg-slate-900 border-t border-x sm:border border-slate-200 dark:border-slate-800 rounded-t-2xl sm:rounded-2xl w-full max-w-3xl p-6 shadow-2xl relative transform transition-all duration-300 max-h-[85vh] sm:max-h-[90vh] flex flex-col animate-slide-up sm:animate-none">
         
         <!-- Mobile Bottom Sheet Handle Bar -->
@@ -436,7 +436,7 @@
 </div>
 
 <!-- Modal / Bottom Sheet Drawer Batch Upload Confirmation -->
-<div id="batchUploadModal" class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200 p-0 sm:p-4">
+<div id="batchUploadModal" class="fixed inset-0 z-60 flex items-end sm:items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200 p-0 sm:p-4">
     <div class="bg-white dark:bg-slate-900 border-t border-x sm:border border-slate-200 dark:border-slate-800 rounded-t-2xl sm:rounded-2xl w-full max-w-3xl p-6 shadow-2xl relative transform transition-all duration-300 max-h-[85vh] sm:max-h-[90vh] flex flex-col animate-slide-up sm:animate-none">
         
         <!-- Mobile Bottom Sheet Handle Bar -->
@@ -1147,8 +1147,14 @@
             return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
         }
 
+        // Prevent click bubbling on file inputs to avoid recursion
+        $('#imageFile, #videoFile, #mainFileInput').on('click', function (e) {
+            e.stopPropagation();
+        });
+
         // --- SINGLE FILE DROPZONE: IMAGE MODAL ---
-        $('#imageDropZone').on('click', function () {
+        $('#imageDropZone').on('click', function (e) {
+            e.preventDefault();
             $('#imageFile').trigger('click');
         });
 
@@ -1212,7 +1218,8 @@
         });
 
         // --- SINGLE FILE DROPZONE: VIDEO MODAL ---
-        $('#videoDropZone').on('click', function () {
+        $('#videoDropZone').on('click', function (e) {
+            e.preventDefault();
             $('#videoFile').trigger('click');
         });
 
@@ -1264,7 +1271,8 @@
         // --- QUICK MAIN PAGE DROPZONE & BATCH UPLOAD SYSTEM ---
         let batchFiles = [];
 
-        $('#mainDropZone').on('click', function () {
+        $('#mainDropZone').on('click', function (e) {
+            e.preventDefault();
             $('#mainFileInput').trigger('click');
         });
 
