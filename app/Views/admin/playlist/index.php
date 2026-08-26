@@ -16,21 +16,27 @@
 
     <!-- TV Selector Dropdown & PIN Copy Badge -->
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2 sm:p-1.5 rounded-2xl shadow-xs w-full sm:w-auto">
-        <div class="flex items-center space-x-2.5 flex-1 w-full sm:w-auto">
-            <label for="tvSelector" class="text-xs font-semibold text-slate-600 dark:text-slate-400 pl-1 sm:pl-3 shrink-0 flex items-center">
+        <div class="flex items-center space-x-2 flex-1 w-full sm:w-80 md:w-96">
+            <label for="tvSelector" class="text-xs font-semibold text-slate-600 dark:text-slate-400 pl-1 sm:pl-2 shrink-0 flex items-center">
                 <i class="fa-solid fa-tv mr-1.5 text-blue-600 dark:text-blue-400"></i>Pilih TV:
             </label>
-            <select id="tvSelector" class="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-white px-3.5 py-2 focus:outline-none focus:border-blue-500 transition-all font-medium w-full flex-1 sm:w-auto">
-                <?php if (empty($tvs)): ?>
-                    <option value="">-- Belum ada TV --</option>
-                <?php else: ?>
-                    <?php foreach ($tvs as $tv): ?>
-                        <option value="<?= $tv['id'] ?>" data-pin="<?= esc($tv['pin']) ?>" <?= ($selectedTvId == $tv['id']) ? 'selected' : '' ?>>
-                            <?= esc($tv['name']) ?> (PIN: <?= esc($tv['pin']) ?>)
-                        </option>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </select>
+            <div class="flex-1 min-w-0 relative">
+                <select id="tvSelector" class="w-full">
+                    <?php if (empty($tvs)): ?>
+                        <option value="">-- Belum ada TV --</option>
+                    <?php else: ?>
+                        <?php foreach ($tvs as $tv): ?>
+                            <option value="<?= $tv['id'] ?>" 
+                                    data-name="<?= esc($tv['name']) ?>" 
+                                    data-location="<?= esc(!empty($tv['location']) ? $tv['location'] : 'Lokasi belum diatur') ?>" 
+                                    data-pin="<?= esc($tv['pin']) ?>" 
+                                    <?= ($selectedTvId == $tv['id']) ? 'selected' : '' ?>>
+                                <?= esc($tv['name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </select>
+            </div>
         </div>
 
         <!-- PIN Badge & Copy Button -->
@@ -201,7 +207,7 @@
 
 <?= $this->section('modals') ?>
 <!-- MODAL 1: Konfigurasi Jadwal & Recurrence Slide -->
-<div id="scheduleModal" class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200">
+<div id="scheduleModal" class="fixed inset-0 z-60 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200">
     <div class="bg-white dark:bg-slate-900 border-t border-x sm:border border-slate-200 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl max-w-xl w-full p-5 sm:p-6 shadow-2xl flex flex-col max-h-[85vh] sm:max-h-[90vh] relative transform transition-all duration-300 animate-slide-up sm:animate-none" id="scheduleModalContent">
         
         <!-- Mobile Bottom Sheet Handle Bar -->
@@ -215,7 +221,7 @@
                 </div>
                 <div>
                     <h3 class="text-base font-bold text-slate-800 dark:text-white tracking-tight">Atur Jadwal & Recurrence Slide</h3>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[240px] sm:max-w-md" id="modalSlideTitle">Judul Slide</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 truncate max-w-60 sm:max-w-md" id="modalSlideTitle">Judul Slide</p>
                 </div>
             </div>
             <button type="button" id="btnCloseScheduleModal" class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-white flex items-center justify-center transition-colors">
@@ -237,7 +243,7 @@
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" id="toggleIsScheduled" name="is_scheduled" value="1" class="sr-only peer">
-                        <div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        <div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                     </label>
                 </div>
 
@@ -346,7 +352,7 @@
 
                     <!-- Live Summary Box -->
                     <div class="p-3.5 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50">
-                        <span class="text-[11px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider block mb-1 flex items-center">
+                        <span class="text-[11px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-1 flex items-center">
                             <i class="fa-solid fa-circle-info mr-1.5"></i>Ringkasan Jadwal:
                         </span>
                         <p class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium" id="liveScheduleSummary">
@@ -379,7 +385,7 @@
 </div>
 
 <!-- MODAL 2: Detail Penayangan Tanggal Kalender (Daily Preview Timeline) -->
-<div id="dayDetailModal" class="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200">
+<div id="dayDetailModal" class="fixed inset-0 z-60 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200">
     <div class="bg-white dark:bg-slate-900 border-t border-x sm:border border-slate-200 dark:border-slate-800 rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl flex flex-col max-h-[85vh] sm:max-h-[90vh] relative transform transition-all duration-300 animate-slide-up sm:animate-none" id="dayDetailModalContent">
         
         <!-- Mobile Bottom Sheet Handle Bar -->
@@ -620,7 +626,7 @@
                                     ${catBadge}
                                     <span class="text-[11px] text-slate-400 dark:text-slate-500 flex items-center">
                                         <i class="fa-regular fa-calendar-check text-blue-500/70 mr-1"></i>
-                                        <span class="truncate max-w-[200px] sm:max-w-xs" title="${item.schedule_text}">${item.schedule_text}</span>
+                                        <span class="truncate max-w-50 sm:max-w-xs" title="${item.schedule_text}">${item.schedule_text}</span>
                                     </span>
                                 </div>
                             </div>
@@ -703,7 +709,98 @@
             });
         }
 
-        // ─── PIN BADGE & COPY ─────────────────────────────────────────────────
+        // ─── PIN BADGE & SELECT2 TV SELECTOR ───────────────────────────────────
+        function escapeHtml(text) {
+            if (!text) return '';
+            return $('<div>').text(text).html();
+        }
+
+        function formatTvOption(option) {
+            if (!option.id) {
+                return option.text;
+            }
+            const $element = $(option.element);
+            const name = escapeHtml($element.data('name') || option.text);
+            const location = escapeHtml($element.data('location') || 'Lokasi belum diatur');
+            const pin = escapeHtml($element.data('pin'));
+
+            const pinBadge = pin ? `<span class="select2-option-pin text-[10px] font-mono font-bold px-1.5 py-0.5 rounded shrink-0 transition-colors">PIN: ${pin}</span>` : '';
+
+            return $(`
+                <div class="flex flex-col py-0.5">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="select2-option-title font-semibold text-xs truncate transition-colors">${name}</span>
+                        ${pinBadge}
+                    </div>
+                    <div class="select2-option-subtitle flex items-center text-[11px] mt-0.5 transition-colors">
+                        <i class="fa-solid fa-location-dot mr-1.5 text-rose-500 text-[10px] shrink-0"></i>
+                        <span class="truncate">${location}</span>
+                    </div>
+                </div>
+            `);
+        }
+
+        function formatTvSelection(option) {
+            if (!option.id) {
+                return option.text;
+            }
+            const $element = $(option.element);
+            const name = escapeHtml($element.data('name') || option.text);
+            const location = escapeHtml($element.data('location'));
+
+            if (location && location !== 'Lokasi belum diatur') {
+                return $(`
+                    <span class="inline-flex items-center space-x-1.5 max-w-full text-xs overflow-hidden">
+                        <span class="font-semibold text-slate-800 dark:text-slate-100 truncate">${name}</span>
+                        <span class="text-slate-400 dark:text-slate-500 text-[11px] shrink-0">•</span>
+                        <span class="text-slate-500 dark:text-slate-400 text-[11px] truncate shrink-0 max-w-[140px] flex items-center">
+                            <i class="fa-solid fa-location-dot text-[10px] mr-1 text-rose-500/80 shrink-0"></i>
+                            <span class="truncate">${location}</span>
+                        </span>
+                    </span>
+                `);
+            }
+            return $(`<span class="font-semibold text-slate-800 dark:text-slate-100 text-xs truncate">${name}</span>`);
+        }
+
+        function matchTvCustom(params, data) {
+            if (!params.term || params.term.toString().trim() === '') {
+                return data;
+            }
+            if (typeof data.text === 'undefined') {
+                return null;
+            }
+
+            const term = params.term.toString().trim().toLowerCase();
+            const $element = $(data.element);
+            const name = ($element.data('name') || data.text || '').toString().toLowerCase();
+            const location = ($element.data('location') || '').toString().toLowerCase();
+            const pin = ($element.data('pin') || '').toString().toLowerCase();
+
+            if (name.indexOf(term) > -1 || location.indexOf(term) > -1 || pin.indexOf(term) > -1) {
+                return data;
+            }
+
+            return null;
+        }
+
+        // Initialize Select2 on #tvSelector
+        $('#tvSelector').select2({
+            templateResult: formatTvOption,
+            templateSelection: formatTvSelection,
+            matcher: matchTvCustom,
+            width: '100%',
+            dropdownParent: $('#tvSelector').parent(),
+            language: {
+                noResults: function () {
+                    return '<span class="text-xs text-slate-400">Tidak ada TV yang cocok</span>';
+                }
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            }
+        });
+
         function updateSelectedPinBadge() {
             const selectedOpt = $('#tvSelector option:selected');
             const pin = selectedOpt.data('pin');

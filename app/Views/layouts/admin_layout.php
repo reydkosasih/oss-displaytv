@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? 'Admin Dashboard' ?> — Display TV</title>
+    <link rel="shortcut icon" type="image/png" href="<?= base_url('assets/logo/logofsi.png') ?>">
 
     <!-- Theme Initialization Script (Prevents FOUC) -->
     <script>
@@ -25,6 +26,10 @@
     <!-- FontAwesome 6 Icons -->
     <link rel="stylesheet" href="<?= asset_url('vendor/fontawesome/css/all.min.css') ?>">
     
+    <!-- Select2 -->
+    <link rel="stylesheet" href="<?= asset_url('vendor/select2/css/select2.min.css') ?>">
+    <link rel="stylesheet" href="<?= asset_url('css/select2-tailwind.css') ?>">
+
     <!-- Compiled Tailwind CSS v4 -->
     <link rel="stylesheet" href="<?= asset_url('css/app.css') ?>">
 
@@ -32,6 +37,8 @@
     <script src="<?= asset_url('vendor/sweetalert2/sweetalert2.all.min.js') ?>"></script>
     <!-- jQuery -->
     <script src="<?= asset_url('vendor/jquery/jquery.min.js') ?>"></script>
+    <!-- Select2 JS -->
+    <script src="<?= asset_url('vendor/select2/js/select2.min.js') ?>"></script>
     <!-- SortableJS -->
     <script src="<?= asset_url('vendor/sortablejs/Sortable.min.js') ?>"></script>
     <!-- Chart.js -->
@@ -61,11 +68,11 @@
                 <!-- Brand Header -->
                 <div class="h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur shrink-0">
                     <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-sky-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                            <i class="fa-solid fa-tv text-white text-sm"></i>
+                        <div class="w-9 h-9 rounded-xl bg-white/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-center p-1.5 shadow-sm">
+                            <img src="<?= base_url('assets/logo/logofsi.png') ?>" alt="Logo FSI" class="w-full h-full object-contain">
                         </div>
                         <div>
-                            <h1 class="font-bold text-slate-800 dark:text-slate-100 leading-tight">Display TV</h1>
+                            <h1 class="font-bold text-slate-800 dark:text-slate-100 leading-tight">FSI TV</h1>
                             <p class="text-[10px] tracking-wider text-blue-600 dark:text-blue-400 font-semibold uppercase">Management System</p>
                         </div>
                     </div>
@@ -335,7 +342,7 @@
 
         <!-- Overall Progress Bar Line -->
         <div class="w-full bg-slate-800 h-1 overflow-hidden">
-            <div id="uploadWidgetProgressBar" class="bg-gradient-to-r from-blue-500 to-sky-400 h-full transition-all duration-200" style="width: 0%"></div>
+            <div id="uploadWidgetProgressBar" class="bg-linear-to-r from-blue-500 to-sky-400 h-full transition-all duration-200" style="width: 0%"></div>
         </div>
 
         <!-- Collapsible Content -->
