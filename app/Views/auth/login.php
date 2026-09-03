@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? 'Login Admin' ?> — Display TV</title>
+    <link rel="shortcut icon" type="image/png" href="<?= base_url('assets/logo/logo.png') ?>">
     
     <!-- Theme Initialization Script (Prevents FOUC) -->
     <script>
@@ -60,10 +61,10 @@
 
         <!-- Logo & Header -->
         <div class="text-center mb-6 sm:mb-8">
-            <div class="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-sky-500 shadow-xl shadow-blue-500/25 mb-3 sm:mb-4 transform hover:scale-105 active:scale-95 transition-all duration-300">
-                <i class="fa-solid fa-tv text-xl sm:text-2xl text-white"></i>
+            <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-white/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 shadow-lg shadow-slate-900/5 dark:shadow-slate-950/50 mb-3 sm:mb-4 transform hover:scale-105 active:scale-95 transition-all duration-300">
+                <img src="<?= base_url('assets/logo/logo.png') ?>" alt="Logo " class="h-10 sm:h-12 w-auto max-w-35 object-contain">
             </div>
-            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Display TV Portal</h1>
+            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Portal Admin</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Sistem Manajemen Display & Content Slideshow</p>
         </div>
 
@@ -135,7 +136,7 @@
 
                 <!-- Submit Button -->
                 <button type="submit" 
-                    class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 text-white font-semibold text-xs sm:text-sm rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 flex items-center justify-center space-x-2 active:scale-[0.98] ux-hover">
+                    class="w-full py-3 px-4 bg-linear-to-r from-blue-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 text-white font-semibold text-xs sm:text-sm rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 flex items-center justify-center space-x-2 active:scale-[0.98] ux-hover">
                     <span>Masuk ke Dashboard</span>
                     <i class="fa-solid fa-arrow-right text-xs"></i>
                 </button>
@@ -144,7 +145,7 @@
 
         <!-- Footer Info -->
         <p class="text-center text-slate-500 text-xs mt-6">
-            &copy; <?= date('Y') ?> TV Slideshow Display App. All rights reserved.
+            &copy; <?= date('Y') ?> PT Fine Sinter Indonesia. All rights reserved.
         </p>
     </div>
 

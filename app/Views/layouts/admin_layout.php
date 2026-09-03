@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? 'Admin Dashboard' ?> — Display TV</title>
-    <link rel="shortcut icon" type="image/png" href="<?= base_url('assets/logo/logofsi.png') ?>">
+    <link rel="shortcut icon" type="image/png" href="<?= base_url('assets/logo/logo.png') ?>">
 
     <!-- Theme Initialization Script (Prevents FOUC) -->
     <script>
@@ -69,10 +69,10 @@
                 <div class="h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur shrink-0">
                     <div class="flex items-center space-x-3">
                         <div class="w-9 h-9 rounded-xl bg-white/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-center p-1.5 shadow-sm">
-                            <img src="<?= base_url('assets/logo/logofsi.png') ?>" alt="Logo FSI" class="w-full h-full object-contain">
+                            <img src="<?= base_url('assets/logo/logo.png') ?>" alt="Logo " class="w-full h-full object-contain">
                         </div>
                         <div>
-                            <h1 class="font-bold text-slate-800 dark:text-slate-100 leading-tight">FSI TV</h1>
+                            <h1 class="font-bold text-slate-800 dark:text-slate-100 leading-tight"> TV</h1>
                             <p class="text-[10px] tracking-wider text-blue-600 dark:text-blue-400 font-semibold uppercase">Management System</p>
                         </div>
                     </div>

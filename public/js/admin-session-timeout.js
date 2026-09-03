@@ -1,6 +1,6 @@
 /**
  * Admin Session Inactivity Timeout Manager
- * FSI Display TV Management System
+ *  Display TV Management System
  *
  * Features:
  * - Detects user idle inactivity (mouse, keyboard, scroll, touch)

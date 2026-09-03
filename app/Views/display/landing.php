@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? 'Portal TV Display' ?></title>
+    <link rel="shortcut icon" type="image/png" href="<?= base_url('assets/logo/logo.png') ?>">
     
     <!-- Theme Initialization Script (Prevents FOUC) -->
     <script>
@@ -41,15 +42,15 @@
 
     <!-- Ambient Glow Backgrounds -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-blue-600/20 via-sky-600/10 to-transparent rounded-full blur-3xl"></div>
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-200 h-87.5 bg-linear-to-b from-blue-600/20 via-sky-600/10 to-transparent rounded-full blur-3xl"></div>
     </div>
 
     <!-- Header Navigation -->
     <header class="relative z-10 border-b border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3.5">
-                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 to-sky-500 flex items-center justify-center shadow-lg shadow-blue-500/25 shrink-0">
-                    <i class="fa-solid fa-tv text-xl text-white"></i>
+                <div class="w-11 h-11 rounded-2xl bg-white/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-center p-2 shadow-lg shadow-slate-900/5 dark:shadow-slate-950/50 shrink-0">
+                    <img src="<?= base_url('assets/logo/logo.png') ?>" alt="Logo " class="w-full h-full object-contain">
                 </div>
                 <div>
                     <h1 class="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white tracking-tight leading-none">TV Display Network</h1>
@@ -118,9 +119,9 @@
                             <div class="h-44 bg-slate-100 dark:bg-slate-950 relative overflow-hidden flex items-center justify-center border-b border-slate-200 dark:border-slate-800/60">
                                 <?php if ($tv['thumbnail_url']): ?>
                                     <img src="<?= $tv['thumbnail_url'] ?>" alt="<?= esc($tv['name']) ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 dark:from-slate-900 via-transparent to-black/30"></div>
+                                    <div class="absolute inset-0 bg-linear-to-t from-slate-900/80 dark:from-slate-900 via-transparent to-black/30"></div>
                                 <?php else: ?>
-                                    <div class="absolute inset-0 bg-gradient-to-br from-blue-100/50 dark:from-blue-950/40 via-slate-100 dark:via-slate-950 to-slate-200 dark:to-slate-950 flex items-center justify-center">
+                                    <div class="absolute inset-0 bg-linear-to-br from-blue-100/50 dark:from-blue-950/40 via-slate-100 dark:via-slate-950 to-slate-200 dark:to-slate-950 flex items-center justify-center">
                                         <i class="fa-solid fa-tv text-5xl text-slate-300 dark:text-slate-800 group-hover:text-blue-500/30 transition-colors duration-500"></i>
                                     </div>
                                 <?php endif; ?>
@@ -225,7 +226,7 @@
                     <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="pinBox w-9 sm:w-12 h-12 sm:h-14 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl sm:rounded-2xl text-center text-lg sm:text-xl font-mono font-bold text-blue-600 dark:text-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all hover:border-blue-400 dark:hover:border-blue-500">
                 </div>
 
-                <button type="submit" id="btnSubmitPin" class="w-full py-3.5 px-4 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 text-white font-semibold text-xs rounded-xl shadow-lg shadow-blue-600/25 hover:shadow-blue-600/40 transition-all duration-200 flex items-center justify-center space-x-2 active:scale-[0.98]">
+                <button type="submit" id="btnSubmitPin" class="w-full py-3.5 px-4 bg-linear-to-r from-blue-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 text-white font-semibold text-xs rounded-xl shadow-lg shadow-blue-600/25 hover:shadow-blue-600/40 transition-all duration-200 flex items-center justify-center space-x-2 active:scale-[0.98]">
                     <span>Verifikasi PIN & Buka Display</span>
                     <i class="fa-solid fa-arrow-right text-xs"></i>
                 </button>

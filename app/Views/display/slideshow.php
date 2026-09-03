@@ -20,8 +20,8 @@ $hasPlaylist   = !empty($initialPlaylist);
     <header class="absolute top-6 left-6 right-6 z-30 flex items-center justify-between pointer-events-none">
         <!-- TV Name & Location -->
         <div class="flex items-center space-x-3.5 bg-slate-900/80 border border-slate-800/80 px-5 py-3 rounded-2xl backdrop-blur-xl shadow-2xl">
-            <div class="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
-                <i class="fa-solid fa-tv text-lg"></i>
+            <div class="w-10 h-10 rounded-xl bg-white/90 dark:bg-slate-800/90 border border-slate-700/80 flex items-center justify-center p-1.5 shadow-sm">
+                <img src="<?= base_url('assets/logo/logo.png') ?>" alt="Logo " class="w-full h-full object-contain">
             </div>
             <div>
                 <h1 class="font-bold text-sm text-white tracking-tight leading-none"><?= esc($tv['name']) ?></h1>
@@ -96,7 +96,7 @@ $hasPlaylist   = !empty($initialPlaylist);
 
     <!-- Bottom Slide Progress Bar -->
     <div class="absolute bottom-0 left-0 right-0 z-30 h-1.5 bg-slate-900/80">
-        <div id="slideProgressBar" class="h-full bg-gradient-to-r from-blue-500 via-sky-500 to-blue-400 transition-none w-0"></div>
+        <div id="slideProgressBar" class="h-full bg-linear-to-r from-blue-500 via-sky-500 to-blue-400 transition-none w-0"></div>
     </div>
 
 </div>

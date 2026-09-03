@@ -20,7 +20,7 @@
 <?php endif; ?>
 
 <!-- Welcome Banner -->
-<div class="mb-8 p-6 rounded-2xl bg-gradient-to-r from-blue-600 via-blue-700 to-sky-800 dark:from-blue-900/50 dark:via-slate-900 dark:to-slate-900 border border-blue-500/20 text-white relative overflow-hidden shadow-lg">
+<div class="mb-8 p-6 rounded-2xl bg-linear-to-r from-blue-600 via-blue-700 to-sky-800 dark:from-blue-900/50 dark:via-slate-900 dark:to-slate-900 border border-blue-500/20 text-white relative overflow-hidden shadow-lg">
     <div class="absolute right-0 top-0 translate-x-4 -translate-y-4 w-64 h-64 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>
     
     <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -220,7 +220,7 @@
                         <div class="flex items-center justify-between mb-1.5">
                             <div class="flex items-center space-x-2">
                                 <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: <?= $cat['color'] ?>"></span>
-                                <span class="text-xs font-medium text-slate-700 dark:text-slate-300 truncate max-w-[140px]"><?= esc($cat['name']) ?></span>
+                                <span class="text-xs font-medium text-slate-700 dark:text-slate-300 truncate max-w-35"><?= esc($cat['name']) ?></span>
                             </div>
                             <span class="text-xs font-bold text-slate-900 dark:text-white ml-2"><?= $cat['total'] ?></span>
                         </div>

@@ -230,7 +230,7 @@
 
                 <div>
                     <label for="videoTitle" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Judul Video</label>
-                    <input type="text" id="videoTitle" name="title" required placeholder="Contoh: Video Profil FSI"
+                    <input type="text" id="videoTitle" name="title" required placeholder="Contoh: Video Profil "
                         class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-all">
                     <p class="text-[10px] text-rose-500 mt-1 hidden" id="err_v_title"></p>
                 </div>

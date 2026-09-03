@@ -6,7 +6,7 @@
     <!-- Page Header & Action Bar -->
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white/70 dark:bg-slate-900/60 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-5 shadow-xs">
         <div class="flex items-center space-x-4">
-            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-400 flex items-center justify-center text-white shadow-lg shadow-blue-500/20 shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-linear-to-tr from-blue-600 via-indigo-600 to-sky-400 flex items-center justify-center text-white shadow-lg shadow-blue-500/20 shrink-0">
                 <i class="fa-solid fa-clock-rotate-left text-lg"></i>
             </div>
             <div>
@@ -287,7 +287,7 @@
 
 <?= $this->section('modals') ?>
 <!-- Modal Diff Viewer -->
-<div id="modalDiff" class="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden p-4 transition-all duration-200">
+<div id="modalDiff" class="fixed inset-0 z-60 flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden p-4 transition-all duration-200">
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-2xl max-h-[90vh] shadow-2xl flex flex-col overflow-hidden animate-scale-up">
         <!-- Header -->
         <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/50 shrink-0">
@@ -326,7 +326,7 @@
 
 <!-- Modal Purge Logs (Superadmin Only) -->
 <?php if ($isSuperadmin): ?>
-<div id="modalPurge" class="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden p-4 transition-all duration-200">
+<div id="modalPurge" class="fixed inset-0 z-60 flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden p-4 transition-all duration-200">
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-scale-up">
         <div class="p-6">
             <div class="flex items-center space-x-3 mb-4">
@@ -528,11 +528,11 @@
                     </td>
                     <td class="py-3.5 px-4 whitespace-nowrap">
                         <div class="flex items-center space-x-2.5">
-                            <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0 shadow-xs">
+                            <div class="w-7 h-7 rounded-full bg-linear-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0 shadow-xs">
                                 ${esc(log.user_name).substring(0, 2).toUpperCase()}
                             </div>
                             <div>
-                                <div class="font-semibold text-slate-800 dark:text-slate-200 text-xs truncate max-w-[130px]">${esc(log.user_name)}</div>
+                                <div class="font-semibold text-slate-800 dark:text-slate-200 text-xs truncate max-w-32.5">${esc(log.user_name)}</div>
                                 <div class="mt-0.5">${roleBadge}</div>
                             </div>
                         </div>
