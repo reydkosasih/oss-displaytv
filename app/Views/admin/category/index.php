@@ -17,20 +17,33 @@
 </div>
 
 <!-- Table Card -->
-<div class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-6 shadow-sm">
-    <!-- Search Bar -->
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-        <div class="relative w-full sm:w-72">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
-                <i class="fa-solid fa-magnifying-glass text-xs"></i>
+<div class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 sm:p-6 shadow-sm">
+    <!-- Search Bar (Sticky on Mobile) -->
+    <div class="-mx-4 -mt-4 p-4 sm:p-0 sm:mx-0 sm:mt-0 sticky top-0 sm:static z-20 bg-white/95 dark:bg-slate-900/95 sm:bg-transparent backdrop-blur-md border-b sm:border-0 border-slate-200/80 dark:border-slate-800/80 mb-4 sm:mb-6 rounded-t-2xl sm:rounded-none">
+        <div class="flex items-center justify-between gap-3">
+            <div class="relative w-full sm:w-72">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                </div>
+                <input type="text" id="searchInput" placeholder="Cari nama atau slug kategori..." 
+                    class="w-full pl-9 pr-8 py-2 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
+                <button type="button" id="btnSearchClear" class="absolute inset-y-0 right-0 pr-3 items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hidden">
+                    <i class="fa-solid fa-circle-xmark text-xs"></i>
+                </button>
             </div>
-            <input type="text" id="searchInput" placeholder="Cari nama atau slug kategori..." 
-                class="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
+            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium shrink-0" id="categoryCountBadge">
+                <!-- Count rendered via JS -->
+            </div>
         </div>
     </div>
 
-    <!-- Table Container -->
-    <div class="overflow-x-auto">
+    <!-- Mobile Card Stack View (< md) -->
+    <div class="md:hidden space-y-3" id="categoryMobileCardList">
+        <!-- Dynamic mobile cards rendered via JS -->
+    </div>
+
+    <!-- Desktop Table View (>= md) -->
+    <div class="hidden md:block overflow-x-auto">
         <table class="w-full text-left border-collapse" id="categoryTable">
             <thead>
                 <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
@@ -153,13 +166,21 @@
             });
         }
 
-        // Render Table Rows
+        // Render Table Rows & Mobile Cards
         function renderTable() {
-            const search = $('#searchInput').val().toLowerCase();
+            const search = $('#searchInput').val().toLowerCase().trim();
 
             const filtered = categoriesData.filter(cat => {
                 return cat.name.toLowerCase().includes(search) || cat.slug.toLowerCase().includes(search);
             });
+
+            if (search) {
+                $('#btnSearchClear').removeClass('hidden').addClass('flex');
+            } else {
+                $('#btnSearchClear').addClass('hidden').removeClass('flex');
+            }
+
+            $('#categoryCountBadge').text(`${filtered.length} Kategori`);
 
             if (filtered.length === 0) {
                 $('#categoryTableBody').html(`
@@ -169,22 +190,30 @@
                         </td>
                     </tr>
                 `);
+                $('#categoryMobileCardList').html(`
+                    <div class="py-8 text-center text-slate-400 dark:text-slate-500 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
+                        Tidak ditemukan data kategori.
+                    </div>
+                `);
                 return;
             }
 
-            let html = '';
+            let tableHtml = '';
+            let cardHtml = '';
+
             filtered.forEach(cat => {
                 const color = cat.color || '#6366f1';
                 
                 const badge = `
-                    <span class="inline-flex items-center space-x-2 px-2.5 py-1 rounded-full text-[11px] font-semibold border"
+                    <span class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border shrink-0"
                           style="background-color: ${color}15; color: ${color}; border-color: ${color}30;">
                         <span class="w-2 h-2 rounded-full" style="background-color: ${color};"></span>
-                        <span class="font-mono">${color.toUpperCase()}</span>
+                        <span class="font-mono text-[10px]">${color.toUpperCase()}</span>
                     </span>
                 `;
 
-                html += `
+                // Desktop Table Row
+                tableHtml += `
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                         <td class="py-3.5 px-4 font-semibold text-slate-800 dark:text-slate-200">
                             ${cat.name}
@@ -209,13 +238,48 @@
                         </td>
                     </tr>
                 `;
+
+                // Mobile Card Stack Item
+                cardHtml += `
+                    <div class="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/70 dark:border-slate-800/70 shadow-xs space-y-3 transition-all">
+                        <div class="flex items-center justify-between gap-2">
+                            <h4 class="font-bold text-slate-800 dark:text-slate-200 text-sm truncate">${cat.name}</h4>
+                            ${badge}
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-200/50 dark:border-slate-800/50">
+                            <span class="font-mono text-[11px] text-slate-500 dark:text-slate-400 truncate">/${cat.slug}</span>
+                            <span class="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-lg bg-slate-200/70 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 text-[11px] font-medium shrink-0">
+                                <i class="fa-solid fa-photo-film text-[10px] text-slate-400"></i>
+                                <span>${cat.contents_count} Media</span>
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-200/50 dark:border-slate-800/50">
+                            <button type="button" class="btnEditCategory min-h-11 px-3 py-2 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 text-blue-600 dark:text-blue-400 font-semibold text-xs flex items-center justify-center space-x-1.5 transition-all active:scale-95" data-id="${cat.id}">
+                                <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                <span>Edit</span>
+                            </button>
+                            <button type="button" class="btnDeleteCategory min-h-11 px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-600 dark:text-rose-400 font-semibold text-xs flex items-center justify-center space-x-1.5 transition-all active:scale-95" data-id="${cat.id}" data-name="${cat.name}">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                                <span>Hapus</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
             });
 
-            $('#categoryTableBody').html(html);
+            $('#categoryTableBody').html(tableHtml);
+            $('#categoryMobileCardList').html(cardHtml);
         }
 
         // Search Input Listener
         $('#searchInput').on('input', function () {
+            renderTable();
+        });
+
+        $('#btnSearchClear').on('click', function () {
+            $('#searchInput').val('');
             renderTable();
         });
 

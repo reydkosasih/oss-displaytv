@@ -17,28 +17,41 @@
 </div>
 
 <!-- Table Card -->
-<div class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-6 shadow-sm">
-    <!-- Filter & Search Bar -->
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-        <div class="relative w-full sm:w-72">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
-                <i class="fa-solid fa-magnifying-glass text-xs"></i>
+<div class="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 sm:p-6 shadow-sm">
+    <!-- Filter & Search Bar (Sticky on Mobile) -->
+    <div class="-mx-4 -mt-4 p-4 sm:p-0 sm:mx-0 sm:mt-0 sticky top-0 sm:static z-20 bg-white/95 dark:bg-slate-900/95 sm:bg-transparent backdrop-blur-md border-b sm:border-0 border-slate-200/80 dark:border-slate-800/80 mb-4 sm:mb-6 rounded-t-2xl sm:rounded-none">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div class="relative w-full sm:w-72">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                </div>
+                <input type="text" id="searchInput" placeholder="Cari nama, email, atau departemen..." 
+                    class="w-full pl-9 pr-8 py-2 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
+                <button type="button" id="btnSearchClear" class="absolute inset-y-0 right-0 pr-3 items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hidden">
+                    <i class="fa-solid fa-circle-xmark text-xs"></i>
+                </button>
             </div>
-            <input type="text" id="searchInput" placeholder="Cari nama, email, atau departemen..." 
-                class="w-full pl-9 pr-4 py-2 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
-        </div>
 
-        <div class="flex items-center space-x-3 w-full sm:w-auto">
-            <select id="roleFilter" class="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-700 dark:text-slate-300 px-3 py-2 focus:outline-none focus:border-blue-500 transition-all">
-                <option value="">Semua Role</option>
-                <option value="superadmin">Superadmin</option>
-                <option value="admin">Admin</option>
-            </select>
+            <div class="flex items-center space-x-3 w-full sm:w-auto">
+                <select id="roleFilter" class="w-full sm:w-auto bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-700 dark:text-slate-300 px-3 py-2 focus:outline-none focus:border-blue-500 transition-all">
+                    <option value="">Semua Role</option>
+                    <option value="superadmin">Superadmin</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <div class="text-xs text-slate-500 dark:text-slate-400 font-medium shrink-0" id="userCountBadge">
+                    <!-- Count rendered via JS -->
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Table Container -->
-    <div class="overflow-x-auto">
+    <!-- Mobile Card Stack View (< md) -->
+    <div class="md:hidden space-y-3" id="userMobileCardList">
+        <!-- Dynamic mobile cards rendered via JS -->
+    </div>
+
+    <!-- Desktop Table View (>= md) -->
+    <div class="hidden md:block overflow-x-auto">
         <table class="w-full text-left border-collapse" id="usersTable">
             <thead>
                 <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
@@ -227,9 +240,9 @@
             });
         }
 
-        // Render Table Rows
+        // Render Table Rows & Mobile Cards
         function renderTable() {
-            const search = $('#searchInput').val().toLowerCase();
+            const search = $('#searchInput').val().toLowerCase().trim();
             const roleFilter = $('#roleFilter').val();
 
             const filtered = usersData.filter(user => {
@@ -240,6 +253,14 @@
                 return matchSearch && matchRole;
             });
 
+            if (search) {
+                $('#btnSearchClear').removeClass('hidden').addClass('flex');
+            } else {
+                $('#btnSearchClear').addClass('hidden').removeClass('flex');
+            }
+
+            $('#userCountBadge').text(`${filtered.length} User`);
+
             if (filtered.length === 0) {
                 $('#userTableBody').html(`
                     <tr>
@@ -248,10 +269,17 @@
                         </td>
                     </tr>
                 `);
+                $('#userMobileCardList').html(`
+                    <div class="py-8 text-center text-slate-400 dark:text-slate-500 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
+                        Tidak ditemukan data pengguna.
+                    </div>
+                `);
                 return;
             }
 
-            let html = '';
+            let tableHtml = '';
+            let cardHtml = '';
+
             filtered.forEach(user => {
                 const isSelf = parseInt(user.id) === currentUserId;
                 const department = user.department ? user.department : '<span class="text-slate-400 dark:text-slate-500">-</span>';
@@ -283,7 +311,8 @@
 
                 const lastLogin = user.last_login_at ? user.last_login_at : '-';
 
-                html += `
+                // Desktop Row
+                tableHtml += `
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                         <td class="py-3.5 px-4">
                             <div class="flex items-center space-x-3">
@@ -313,13 +342,74 @@
                         </td>
                     </tr>
                 `;
+
+                // Mobile Card Item
+                cardHtml += `
+                    <div class="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/70 dark:border-slate-800/70 shadow-xs space-y-3 transition-all">
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="flex items-center space-x-3 min-w-0">
+                                <div class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex items-center justify-center font-bold text-xs text-slate-700 dark:text-slate-300 shrink-0 shadow-xs">
+                                    ${user.name.substring(0, 2).toUpperCase()}
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="font-bold text-slate-800 dark:text-slate-200 text-sm truncate">
+                                        ${user.name} ${isSelf ? '<span class="text-[10px] text-blue-600 dark:text-blue-400 font-normal">(Anda)</span>' : ''}
+                                    </p>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">${user.email}</p>
+                                </div>
+                            </div>
+                            <div class="shrink-0">
+                                ${statusBadge}
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs pt-2 border-t border-slate-200/50 dark:border-slate-800/50">
+                            <div class="flex items-center space-x-2">
+                                ${roleBadge}
+                                <span class="text-slate-500 dark:text-slate-400 text-[11px] truncate flex items-center gap-1">
+                                    <i class="fa-regular fa-building text-[10px]"></i>
+                                    ${user.department ? user.department : '-'}
+                                </span>
+                            </div>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">
+                                ${lastLogin !== '-' ? `Login: ${lastLogin.substring(0, 16)}` : 'Belum login'}
+                            </span>
+                        </div>
+
+                        <!-- Category access -->
+                        <div class="pt-1">
+                            <p class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 mb-1">Akses Kategori:</p>
+                            ${categoriesHtml}
+                        </div>
+
+                        <!-- Action buttons (touch target >= 44px) -->
+                        <div class="grid ${!isSelf ? 'grid-cols-2' : 'grid-cols-1'} gap-2 pt-2 border-t border-slate-200/50 dark:border-slate-800/50">
+                            <button type="button" class="btnEditUser min-h-11 px-3 py-2 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 text-blue-600 dark:text-blue-400 font-semibold text-xs flex items-center justify-center space-x-1.5 transition-all active:scale-95" data-id="${user.id}">
+                                <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                <span>Edit User</span>
+                            </button>
+                            ${!isSelf ? `
+                                <button type="button" class="btnDeleteUser min-h-11 px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-600 dark:text-rose-400 font-semibold text-xs flex items-center justify-center space-x-1.5 transition-all active:scale-95" data-id="${user.id}" data-name="${user.name}">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                    <span>Hapus</span>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
             });
 
-            $('#userTableBody').html(html);
+            $('#userTableBody').html(tableHtml);
+            $('#userMobileCardList').html(cardHtml);
         }
 
         // Search & Filter Listeners
         $('#searchInput, #roleFilter').on('input change', function () {
+            renderTable();
+        });
+
+        $('#btnSearchClear').on('click', function () {
+            $('#searchInput').val('');
             renderTable();
         });
 

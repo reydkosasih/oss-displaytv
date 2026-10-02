@@ -1,6 +1,6 @@
 /**
  * Admin Session Inactivity Timeout Manager
- *  Display TV Management System
+ * OSS Display TV Management System
  *
  * Features:
  * - Detects user idle inactivity (mouse, keyboard, scroll, touch)

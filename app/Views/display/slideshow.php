@@ -17,7 +17,7 @@ $hasPlaylist   = !empty($initialPlaylist);
 <div class="relative w-screen h-screen overflow-hidden bg-slate-950 text-white select-none">
 
     <!-- Top Overlay Badge Header -->
-    <header class="absolute top-6 left-6 right-6 z-30 flex items-center justify-between pointer-events-none">
+    <header class="absolute z-30 flex items-center justify-between pointer-events-none" style="top: max(1.5rem, calc(0.5rem + env(safe-area-inset-top, 0px))); left: max(1.5rem, calc(0.5rem + env(safe-area-inset-left, 0px))); right: max(1.5rem, calc(0.5rem + env(safe-area-inset-right, 0px)));">
         <!-- TV Name & Location -->
         <div class="flex items-center space-x-3.5 bg-slate-900/80 border border-slate-800/80 px-5 py-3 rounded-2xl backdrop-blur-xl shadow-2xl">
             <div class="w-10 h-10 rounded-xl bg-white/90 dark:bg-slate-800/90 border border-slate-700/80 flex items-center justify-center p-1.5 shadow-sm">
@@ -53,7 +53,7 @@ $hasPlaylist   = !empty($initialPlaylist);
 
     <!-- Container 2: HTML5 Video Slide -->
     <div id="videoSlideContainer" class="absolute inset-0 z-10 flex items-center justify-center bg-black" style="opacity:0;pointer-events:none;transition:opacity 0.7s ease;">
-        <video id="videoSlideElement" style="width:100%;height:100%;object-fit:contain;" playsinline muted></video>
+        <video id="videoSlideElement" style="width:100%;height:100%;object-fit:contain;" playsinline></video>
     </div>
 
     <!-- Container 3: YouTube Embed Slide -->
@@ -62,7 +62,7 @@ $hasPlaylist   = !empty($initialPlaylist);
             id="youtubeIframe"
             style="width:100%;height:100%;border:0;"
             src=""
-            allow="autoplay; encrypted-media"
+            allow="autoplay *; encrypted-media; fullscreen"
             allowfullscreen
             title="YouTube Video Slide">
         </iframe>
@@ -307,9 +307,14 @@ $hasPlaylist   = !empty($initialPlaylist);
             const vid = el('videoSlideElement');
             if (vid && item.file_url) {
                 vid.src = item.file_url;
+                vid.muted = false;
                 showEl('videoSlideContainer');
                 vid.load();
-                vid.play().catch(() => {});
+                vid.play().catch(() => {
+                    // Fallback jika browser memblokir unmuted autoplay tanpa gesture pengguna
+                    vid.muted = true;
+                    vid.play().catch(() => {});
+                });
                 vid.onended = () => {
                     clearTimeout(slideTimer);
                     slideTimer = setTimeout(nextSlide, VIDEO_SLIDE_DELAY * 1000);
@@ -326,8 +331,8 @@ $hasPlaylist   = !empty($initialPlaylist);
             const ytId    = item.youtube_id;
             const ytFrame = el('youtubeIframe');
             if (ytId && ytFrame) {
-                // Use plain embed URL — no JS API needed, works even with ad blockers
-                ytFrame.src = `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&enablejsapi=0&playsinline=1`;
+                // Use unmuted embed URL (mute=0) with autoplay
+                ytFrame.src = `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&mute=0&controls=0&rel=0&modestbranding=1&enablejsapi=0&playsinline=1`;
                 showEl('youtubeSlideContainer');
             } else {
                 nextSlide();

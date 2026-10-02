@@ -1,20 +1,42 @@
 <!DOCTYPE html>
-<html lang="id" class="dark h-full">
+<html lang="id" class="dark h-full bg-slate-50 dark:bg-slate-950">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title><?= $title ?? 'Portal TV Display' ?></title>
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="<?= base_url('site.webmanifest') ?>">
+
+    <!-- Theme Color & Mobile Status Bar (Android & iOS) -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#020617">
+    <meta name="theme-color" id="metaThemeColor" content="#020617">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="OSS Display TV">
+
+    <!-- Icons & Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url('assets/icons/apple-touch-icon.png') ?>">
+    <link rel="icon" type="image/png" sizes="192x192" href="<?= base_url('assets/icons/icon-192x192.png') ?>">
+    <link rel="icon" type="image/png" sizes="512x512" href="<?= base_url('assets/icons/icon-512x512.png') ?>">
     <link rel="shortcut icon" type="image/png" href="<?= base_url('assets/logo/logo.png') ?>">
     
-    <!-- Theme Initialization Script (Prevents FOUC) -->
+    <!-- Theme Initialization Script (Prevents FOUC & Syncs Status Bar Theme-Color) -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') {
+            const isDark = savedTheme !== 'light';
+            if (!isDark) {
                 document.documentElement.classList.remove('dark');
             } else {
                 document.documentElement.classList.add('dark');
             }
+            const targetColor = isDark ? '#020617' : '#ffffff';
+            document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
+                meta.setAttribute('content', targetColor);
+            });
         })();
     </script>
 
@@ -33,12 +55,22 @@
     <script src="<?= asset_url('vendor/sweetalert2/sweetalert2.all.min.js') ?>"></script>
     <!-- jQuery -->
     <script src="<?= asset_url('vendor/jquery/jquery.min.js') ?>"></script>
+    <!-- Global Theme Toggle Controller (Circle Effect) -->
+    <script src="<?= asset_url('js/theme-toggle.js') ?>"></script>
 
     <style>
+        html, body {
+            height: 100%;
+            min-height: 100dvh;
+            background-color: #f8fafc;
+        }
+        html.dark, html.dark body {
+            background-color: #020617;
+        }
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="h-full bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased selection:bg-blue-500 selection:text-white flex flex-col justify-between relative overflow-x-hidden min-h-screen transition-colors duration-300">
+<body class="h-full min-h-dvh bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased selection:bg-blue-500 selection:text-white flex flex-col justify-between relative overflow-x-hidden transition-colors duration-300">
 
     <!-- Ambient Glow Backgrounds -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
@@ -46,14 +78,14 @@
     </div>
 
     <!-- Header Navigation -->
-    <header class="relative z-10 border-b border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl transition-colors duration-300">
+    <header class="relative z-10 border-b border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl transition-colors duration-300 box-content" style="padding-top: env(safe-area-inset-top, 0px);">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3.5">
                 <div class="w-11 h-11 rounded-2xl bg-white/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-center p-2 shadow-lg shadow-slate-900/5 dark:shadow-slate-950/50 shrink-0">
-                    <img src="<?= base_url('assets/logo/logo.png') ?>" alt="Logo " class="w-full h-full object-contain">
+                    <img src="<?= base_url('assets/logo/logo.png') ?>" alt="Logo OSS" class="w-full h-full object-contain">
                 </div>
                 <div>
-                    <h1 class="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white tracking-tight leading-none">TV Display Network</h1>
+                    <h1 class="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white tracking-tight leading-none">OSS - TV Display Network</h1>
                     <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-1 sm:line-clamp-none">Pilih TV Display untuk Memulai Slideshow Penayangan</p>
                 </div>
             </div>
@@ -237,30 +269,7 @@
     <script>
         $(document).ready(function () {
 
-            // Theme Toggle Logic
-            function updateThemeIcons() {
-                const isDark = document.documentElement.classList.contains('dark');
-                document.querySelectorAll('.themeIconSun').forEach(i => {
-                    i.style.display = isDark ? 'inline-block' : 'none';
-                });
-                document.querySelectorAll('.themeIconMoon').forEach(i => {
-                    i.style.display = isDark ? 'none' : 'inline-block';
-                });
-            }
 
-            updateThemeIcons();
-
-            $('.btnThemeToggle').on('click', function () {
-                const isDark = document.documentElement.classList.contains('dark');
-                if (isDark) {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('theme', 'light');
-                } else {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('theme', 'dark');
-                }
-                updateThemeIcons();
-            });
 
             // Search TV Card Filter
             $('#searchTvInput').on('input', function () {

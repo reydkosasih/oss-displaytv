@@ -54,12 +54,24 @@ ServerSignature Off
 # Disable server signature end
 
 # ----------------------------------------------------------------------
-# Gzip / Deflate Compression
+# Brotli Compression (lebih efisien ~20-26% dari Deflate)
+# Tersedia di Apache 2.4.26+ dengan mod_brotli (cPanel/WHM modern)
+# ----------------------------------------------------------------------
+<IfModule mod_brotli.c>
+    AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/xml text/css
+    AddOutputFilterByType BROTLI_COMPRESS application/javascript application/x-javascript
+    AddOutputFilterByType BROTLI_COMPRESS application/json application/xml image/svg+xml
+    AddOutputFilterByType BROTLI_COMPRESS font/ttf font/woff font/woff2 application/font-woff
+</IfModule>
+
+# ----------------------------------------------------------------------
+# Gzip / Deflate Compression (fallback jika Brotli tidak tersedia)
 # ----------------------------------------------------------------------
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
     AddOutputFilterByType DEFLATE application/javascript application/x-javascript application/json application/xml
     AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE font/ttf font/woff font/woff2 application/font-woff
 </IfModule>
 
 # ----------------------------------------------------------------------
@@ -94,7 +106,7 @@ ServerSignature Off
 
 <IfModule mod_headers.c>
     # Cache-Control max-age for static assets (1 year = 31536000 seconds)
-    <FilesMatch "\.(ico|jpe?g|png|gif|webp|css|js|woff2?|ttf|svg)$">
+    <FilesMatch "\.(ico|jpe?g|png|gif|webp|avif|css|js|woff2?|ttf|otf|svg)$">
         Header set Cache-Control "max-age=31536000, public, immutable"
     </FilesMatch>
 
@@ -104,4 +116,10 @@ ServerSignature Off
         Header set Pragma "no-cache"
         Header set Expires "0"
     </FilesMatch>
+
+    # Security Headers (meningkatkan skor Lighthouse Best Practices)
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
 </IfModule>

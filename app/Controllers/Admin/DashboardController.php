@@ -8,6 +8,11 @@ class DashboardController extends BaseController
 {
     public function index()
     {
+        // Cache halaman selama 60 detik untuk mengurangi beban 5x DB queries per-request.
+        // Cache otomatis expire setelah 60 detik & rebuild dari DB.
+        // Hanya berlaku untuk request GET tanpa query params (CI4 cachePage default behavior).
+        $this->cachePage(60);
+
         $db = \Config\Database::connect();
 
         $stats = [

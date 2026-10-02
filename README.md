@@ -49,6 +49,7 @@
 | **Chart Engine** | Chart.js | v4.4.x | Vendor Lokal (`vendor/chartjs`) |
 | **Reorder Component** | SortableJS | v1.15.2 | Vendor Lokal (`vendor/sortablejs`) |
 | **Alert & Notification** | SweetAlert2 | v11.x | Vendor Lokal (`vendor/sweetalert2`) |
+| **Dropdown Component** | Select2 | v4.1.0-rc.0 | Vendor Lokal (`vendor/select2`) |
 | **Real-Time Handler** | Custom `SseStreamer` | - | Library internal dengan *burst-looping* & *session-release* |
 | **Video Metadata** | getID3 | - | Auto-duration extractor untuk file video MP4 |
 
@@ -58,9 +59,9 @@
 
 ### 1. Persyaratan Sistem
 - PHP >= 8.3 dengan ekstensi: `gd`, `intl`, `mbstring`, `mysqli`, `curl`, `json`.
-- Composer 2.x (https://getcomposer.org/download/)
-- Node.js >= 18.x & npm (https://nodejs.org/en/download)
-- Web Server (Apache/Nginx/Laragon/XAMPP) atau PHP Built-in CLI Server.
+- Composer 2.x
+- Node.js >= 18.x & npm
+- Web Server (Apache/Nginx/Laragon) atau PHP Built-in CLI Server.
 
 ### 2. Langkah Instalasi
 
@@ -69,17 +70,20 @@
    ```bash
    c:\laragon\www\oss-displaytv
    ```
-   atau XAMPP
-   ```bash
-   c:\xampp\htdocs\oss-displaytv
-   ```
 
-2. **Instal Dependensi PHP**:
+2. **Instal Dependensi PHP (Composer)**:
    ```bash
    composer install
    ```
 
-3. **Konfigurasi Environment**:
+3. **Instal Dependensi Frontend & Build Tool (npm)**:
+   ```bash
+   npm install
+   ```
+   > [!NOTE]
+   > File library vendor frontend untuk browser (jQuery, FontAwesome, Chart.js, Select2, SortableJS, SweetAlert2) sudah tersedia langsung secara lokal di folder `public/vendor/` sehingga aplikasi dapat langsung berjalan tanpa perlu setup CDN eksternal.
+
+4. **Konfigurasi Environment**:
    Salin file `env` menjadi `.env`:
    ```bash
    cp env .env
@@ -97,19 +101,18 @@
    database.default.DBDriver = MySQLi
    ```
 
-4. **Jalankan Migrasi & Database Seeder**:
+5. **Jalankan Migrasi & Database Seeder**:
    ```bash
-   php spark db:create
    php spark migrate
    php spark db:seed SuperadminSeeder
    ```
 
-5. **Kompilasi CSS (Tailwind v4)**:
+6. **Kompilasi CSS (Tailwind v4)**:
    ```bash
    npm run build:css
    ```
 
-6. **Jalankan Server Development**:
+7. **Jalankan Server Development**:
    ```bash
    php spark serve
    ```
@@ -140,7 +143,7 @@ Setelah menjalankan `SuperadminSeeder`, gunakan akun berikut untuk masuk ke Dash
 
 > [!TIP]
 > **Asset Vendor Lokal**:
-> Semua library frontend (FontAwesome, jQuery, Chart.js, SortableJS, SweetAlert2) disimpan secara lokal di folder `public/vendor/`. Gunakan helper `<?= base_url('vendor/...') ?>` ketimbang CDN eksternal untuk menjamin keandalan saat jaringan offline/intranet.
+> Semua library frontend (FontAwesome, jQuery, Chart.js, Select2, SortableJS, SweetAlert2) disimpan secara lokal di folder `public/vendor/`. Gunakan helper `<?= base_url('vendor/...') ?>` ketimbang CDN eksternal untuk menjamin keandalan saat jaringan offline/intranet.
 
 > [!NOTE]
 > **YouTube Embed tanpa API**:
@@ -167,7 +170,7 @@ oss-displaytv/
 ├── public/
 │   ├── css/app.css        # Output kompilasi Tailwind CSS v4
 │   ├── uploads/           # Folder penyimpanan media (Gambar/Video)
-│   └── vendor/            # Vendor Frontend (Chart.js, jQuery, SortableJS, SweetAlert2, FA)
+│   └── vendor/            # Vendor Frontend (Chart.js, jQuery, Select2, SortableJS, SweetAlert2, FA)
 ├── AGENTS.md              # Context & Rules panduan pengembang AI/Human
 └── README.md              # Dokumentasi Utama Proyek
 ```
@@ -177,14 +180,22 @@ oss-displaytv/
 ## 💻 Perintah CLI Penting (Commands)
 
 ```bash
+# Instal dependensi backend (Composer)
+composer install
+
+# Instal dependensi frontend & build tool (npm)
+npm install
+
 # Menjalankan dev server PHP Spark
 php spark serve
 
 # Kompilasi CSS Tailwind v4
 npm run build:css
 
+# Watch CSS Tailwind v4 (mode pengembangan)
+npm run watch:css
+
 # Menjalankan DB migration & seeder
-php spark db:create
 php spark migrate
 php spark db:seed SuperadminSeeder
 

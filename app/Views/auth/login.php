@@ -1,20 +1,42 @@
 <!DOCTYPE html>
-<html lang="id" class="dark h-full">
+<html lang="id" class="dark h-full bg-slate-50 dark:bg-slate-950">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title><?= $title ?? 'Login Admin' ?> — Display TV</title>
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="<?= base_url('site.webmanifest') ?>">
+
+    <!-- Theme Color & Mobile Status Bar (Android & iOS) -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#020617">
+    <meta name="theme-color" id="metaThemeColor" content="#020617">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="OSS Display TV">
+
+    <!-- Icons & Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url('assets/icons/apple-touch-icon.png') ?>">
+    <link rel="icon" type="image/png" sizes="192x192" href="<?= base_url('assets/icons/icon-192x192.png') ?>">
+    <link rel="icon" type="image/png" sizes="512x512" href="<?= base_url('assets/icons/icon-512x512.png') ?>">
     <link rel="shortcut icon" type="image/png" href="<?= base_url('assets/logo/logo.png') ?>">
     
-    <!-- Theme Initialization Script (Prevents FOUC) -->
+    <!-- Theme Initialization Script (Prevents FOUC & Syncs Status Bar Theme-Color) -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') {
+            const isDark = savedTheme !== 'light';
+            if (!isDark) {
                 document.documentElement.classList.remove('dark');
             } else {
                 document.documentElement.classList.add('dark');
             }
+            const targetColor = isDark ? '#020617' : '#ffffff';
+            document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
+                meta.setAttribute('content', targetColor);
+            });
         })();
     </script>
 
@@ -31,12 +53,22 @@
 
     <!-- SweetAlert2 -->
     <script src="<?= asset_url('vendor/sweetalert2/sweetalert2.all.min.js') ?>"></script>
+    <!-- Global Theme Toggle Controller (Circle Effect) -->
+    <script src="<?= asset_url('js/theme-toggle.js') ?>"></script>
 
     <style>
+        html, body {
+            height: 100%;
+            min-height: 100dvh;
+            background-color: #f8fafc;
+        }
+        html.dark, html.dark body {
+            background-color: #020617;
+        }
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-x-hidden select-none antialiased transition-colors duration-300">
+<body class="min-h-dvh bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-x-hidden select-none antialiased transition-colors duration-300" style="padding-top: max(1rem, env(safe-area-inset-top, 0px)); padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));">
 
     <!-- Ambient Glowing Background Elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
@@ -62,7 +94,7 @@
         <!-- Logo & Header -->
         <div class="text-center mb-6 sm:mb-8">
             <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-white/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 shadow-lg shadow-slate-900/5 dark:shadow-slate-950/50 mb-3 sm:mb-4 transform hover:scale-105 active:scale-95 transition-all duration-300">
-                <img src="<?= base_url('assets/logo/logo.png') ?>" alt="Logo " class="h-10 sm:h-12 w-auto max-w-35 object-contain">
+                <img src="<?= base_url('assets/logo/logo.png') ?>" alt="Logo OSS" class="h-10 sm:h-12 w-auto max-w-35 object-contain">
             </div>
             <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Portal Admin</h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Sistem Manajemen Display & Content Slideshow</p>
@@ -145,39 +177,12 @@
 
         <!-- Footer Info -->
         <p class="text-center text-slate-500 text-xs mt-6">
-            &copy; <?= date('Y') ?> PT Fine Sinter Indonesia. All rights reserved.
+            &copy; <?= date('Y') ?> Rey Dwi Kosasih. All rights reserved.
         </p>
     </div>
 
     <script>
-        // Theme Toggle Logic
-        function updateThemeIcons() {
-            const isDark = document.documentElement.classList.contains('dark');
-            document.querySelectorAll('.themeIconSun').forEach(i => {
-                i.style.display = isDark ? 'inline-block' : 'none';
-            });
-            document.querySelectorAll('.themeIconMoon').forEach(i => {
-                i.style.display = isDark ? 'none' : 'inline-block';
-            });
-        }
 
-        document.addEventListener('DOMContentLoaded', updateThemeIcons);
-
-        function toggleTheme() {
-            const isDark = document.documentElement.classList.contains('dark');
-            if (isDark) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            }
-            updateThemeIcons();
-        }
-
-        document.querySelectorAll('.btnThemeToggle').forEach(btn => {
-            btn.addEventListener('click', toggleTheme);
-        });
 
         // Password visibility toggle
         const passwordInput = document.getElementById('password');

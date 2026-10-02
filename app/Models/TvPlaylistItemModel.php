@@ -184,7 +184,7 @@ class TvPlaylistItemModel extends Model
             return [
                 'status'        => 'always',
                 'badge'         => 'Selalu Tayang',
-                'text'          => 'Selalu ditayangkan tanpa batasan jadwal',
+                'text'          => '-',
                 'is_active_now' => true,
             ];
         }

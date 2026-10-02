@@ -230,8 +230,13 @@
             </div>
         </div>
 
-        <!-- Scrollable Table -->
-        <div class="overflow-x-auto">
+        <!-- Mobile Card Stack View (< md) -->
+        <div class="md:hidden space-y-3 p-4" id="auditMobileCardList">
+            <!-- Dynamic Log Cards rendered via JS -->
+        </div>
+
+        <!-- Desktop Scrollable Table (>= md) -->
+        <div class="hidden md:block overflow-x-auto">
             <table class="w-full text-left border-collapse" id="auditTable">
                 <thead>
                     <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider bg-slate-50/30 dark:bg-slate-950/20">
@@ -460,11 +465,12 @@
     }
 
     async function fetchLogs() {
-        const loading = document.getElementById('loadingIndicator');
-        const iconRef = document.getElementById('iconRefresh');
-        const tbody   = document.getElementById('auditTableBody');
-        const empty   = document.getElementById('emptyState');
-        const pagBar  = document.getElementById('paginationBar');
+        const loading    = document.getElementById('loadingIndicator');
+        const iconRef    = document.getElementById('iconRefresh');
+        const tbody      = document.getElementById('auditTableBody');
+        const mobileList = document.getElementById('auditMobileCardList');
+        const empty      = document.getElementById('emptyState');
+        const pagBar     = document.getElementById('paginationBar');
 
         loading.classList.remove('hidden');
         if (iconRef) iconRef.classList.add('fa-spin');
@@ -496,6 +502,7 @@
             document.getElementById('statFiltered').textContent = activeTags.length ? activeTags.join(', ') : 'Semua Entri';
 
             tbody.innerHTML = '';
+            if (mobileList) mobileList.innerHTML = '';
 
             if (json.data.length === 0) {
                 empty.classList.remove('hidden');
@@ -507,9 +514,6 @@
 
             // Render Rows
             json.data.forEach(log => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors group';
-
                 const hasDiff = Boolean(log.old_values || log.new_values);
                 const roleBadge = log.user_role === 'superadmin' 
                     ? '<span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">superadmin</span>'
@@ -522,6 +526,9 @@
                        </button>`
                     : `<span class="text-slate-300 dark:text-slate-700 text-xs">—</span>`;
 
+                // Desktop Table Row
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors group';
                 tr.innerHTML = `
                     <td class="py-3.5 px-5 whitespace-nowrap">
                         <div class="font-medium text-slate-800 dark:text-slate-200 text-xs">${formatDate(log.created_at)}</div>
@@ -550,8 +557,51 @@
                     </td>
                     <td class="py-3.5 px-5 text-right whitespace-nowrap">${detailBtn}</td>
                 `;
-
                 tbody.appendChild(tr);
+
+                // Mobile Card Stack Item
+                if (mobileList) {
+                    const card = document.createElement('div');
+                    card.className = 'p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-200/70 dark:border-slate-800/70 shadow-xs space-y-3 transition-all';
+                    card.innerHTML = `
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="flex items-center space-x-2.5 min-w-0">
+                                <div class="w-8 h-8 rounded-full bg-linear-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0 shadow-xs">
+                                    ${esc(log.user_name).substring(0, 2).toUpperCase()}
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="font-semibold text-slate-800 dark:text-slate-200 text-xs truncate">${esc(log.user_name)}</div>
+                                    <div class="mt-0.5">${roleBadge}</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-1.5 shrink-0">
+                                ${renderModuleBadge(log.module)}
+                                ${renderActionBadge(log.action)}
+                            </div>
+                        </div>
+
+                        <div class="text-xs text-slate-700 dark:text-slate-300 leading-snug">
+                            ${esc(log.description)}
+                            ${log.entity_name ? `<div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 flex items-center space-x-1"><i class="fa-solid fa-tag text-[9px]"></i><span>${esc(log.entity_name)}</span></div>` : ''}
+                        </div>
+
+                        <div class="flex items-center justify-between text-[11px] pt-2 border-t border-slate-200/50 dark:border-slate-800/50">
+                            <div class="flex items-center space-x-2 min-w-0">
+                                <span class="text-slate-400 dark:text-slate-500 shrink-0">${formatDate(log.created_at)}</span>
+                                <span class="inline-flex items-center px-1.5 py-0.5 rounded font-mono text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 truncate">
+                                    ${esc(log.ip_address)}
+                                </span>
+                            </div>
+                            ${hasDiff ? `
+                                <button type="button" class="btnViewDiff min-h-11 px-3 py-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 rounded-xl transition-all flex items-center space-x-1.5 active:scale-95 ml-auto shrink-0" data-id="${log.id}">
+                                    <i class="fa-solid fa-code-compare text-xs"></i>
+                                    <span>Diff</span>
+                                </button>
+                            ` : ''}
+                        </div>
+                    `;
+                    mobileList.appendChild(card);
+                }
             });
 
             // Pagination update
